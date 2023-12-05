@@ -29,7 +29,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenNoNullTeams_whenStartNewMatch_thenMatchStartedInProgressAndScoreZero() {
+    void givenNoNullTeams_whenStartNewMatch_thenMatchStartedInProgressAndScoreZero() throws StartNewMatchException {
         Match match = liveScoreboardApi.startNewMatch(homeTeam, awayTeam);
         assertNotNull(match);
         assertEquals(0, match.getScore());
