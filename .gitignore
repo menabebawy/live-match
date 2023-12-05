@@ -22,3 +22,12 @@ gradle-app.setting
 
 # Ignore Gradle build output directory
 build
+
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+*.iml
+*.idea
