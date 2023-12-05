@@ -13,7 +13,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LiveScoreboardApiImlTest {
+class LiveScoreboardApiImplTest {
     LiveScoreboardApi liveScoreboardApi;
     static Team homeTeam = new Team(UUID.randomUUID().toString(), "HomeTeam");
     static Team awayTeam = new Team(UUID.randomUUID().toString(), "AwayTeam");

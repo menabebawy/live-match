@@ -7,6 +7,6 @@ public interface LiveScoreboardApi {
     Match startNewMatch(Team homeTeam, Team awayTeam);
 
     static LiveScoreboardApi createInstant() {
-        return new LiveScoreboardApiIml();
+        return new LiveScoreboardApiImpl();
     }
 }
