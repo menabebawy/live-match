@@ -13,6 +13,9 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
 
     @Override
     public Match startNewMatch(Team homeTeam, Team awayTeam) throws StartNewMatchException {
+        if (homeTeam == null || awayTeam == null) {
+            throw new StartNewMatchException("team/s should not be null");
+        }
         return matchService.start(homeTeam, awayTeam);
     }
 }
