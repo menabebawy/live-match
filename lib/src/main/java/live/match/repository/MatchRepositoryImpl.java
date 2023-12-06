@@ -3,6 +3,7 @@ package live.match.repository;
 import live.match.service.Match;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,6 +28,13 @@ class MatchRepositoryImpl implements MatchRepository {
     public Optional<Match> fetchById(String id) {
         Match match = matchMap.get(id);
         return match != null ? Optional.of(match) : Optional.empty();
+    }
+
+    @Override
+    public List<Match> fetchAllInProgress() {
+        return matchMap.values().stream()
+                .filter(match -> !match.isFinished())
+                .toList();
     }
 
     @Override

@@ -2,11 +2,9 @@ package live.match.service;
 
 import live.match.api.InvalidMatchStateException;
 
-import java.util.Date;
-
 public final class Match {
     private final String id;
-    private final Date startedAt;
+    private final long startedAt;
     private final Team homeTeam;
     private final Team awayTeam;
     private int homeTeamScore;
@@ -15,7 +13,7 @@ public final class Match {
 
     private final MatchService matchService;
 
-    Match(String id, Date startedAt, Team homeTeam, Team awayTeam, MatchService matchService) {
+    Match(String id, long startedAt, Team homeTeam, Team awayTeam, MatchService matchService) {
         this.id = id;
         this.startedAt = startedAt;
         this.homeTeam = homeTeam;
@@ -25,6 +23,10 @@ public final class Match {
 
     public String getId() {
         return id;
+    }
+
+    public long getStartedAt() {
+        return startedAt;
     }
 
     public Team getHomeTeam() {

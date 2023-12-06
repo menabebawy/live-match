@@ -18,7 +18,7 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
 
     @Override
     public Scoreboard createScoreboard() {
-        return null;
+        return matchService.createSoretedScoreboard();
     }
 
     private void validateParameters(String homeTeamName, String awayTeamName) throws StartNewMatchException {

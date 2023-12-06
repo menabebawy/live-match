@@ -1,6 +1,7 @@
 package live.match.service;
 
 import live.match.api.InvalidMatchStateException;
+import live.match.api.Scoreboard;
 import live.match.api.StartNewMatchException;
 import live.match.repository.MatchRepository;
 
@@ -10,6 +11,8 @@ public interface MatchService {
     void update(String id, int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException;
 
     void finish(String id) throws InvalidMatchStateException;
+
+    Scoreboard createSoretedScoreboard();
 
     static MatchService createInstant() {
         return new MatchServiceImpl(MatchRepository.createInstant());

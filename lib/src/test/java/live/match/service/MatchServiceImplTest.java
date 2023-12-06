@@ -6,8 +6,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class MatchServiceImplTest {
@@ -33,7 +31,7 @@ class MatchServiceImplTest {
 
     @Test
     void givenNotStartedMatchYet_whenUpdateMatch_thenThrowInvalidMatchStateException() {
-        Match match = new Match("id", new Date(), new Team("Team1"), new Team("Team2"), matchService);
+        Match match = new Match("id", System.nanoTime(), new Team("Team1"), new Team("Team2"), matchService);
         Exception exception = assertThrows(InvalidMatchStateException.class, () -> match.update(1, 0));
         assertNotNull(exception);
     }
