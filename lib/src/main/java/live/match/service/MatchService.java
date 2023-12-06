@@ -9,6 +9,8 @@ public interface MatchService {
 
     void update(String id, int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException;
 
+    void finish(String id) throws InvalidMatchStateException;
+
     static MatchService createInstant() {
         return new MatchServiceImpl(MatchRepository.createInstant());
     }

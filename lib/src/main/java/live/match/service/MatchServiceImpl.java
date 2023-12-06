@@ -33,6 +33,36 @@ class MatchServiceImpl implements MatchService {
 
     @Override
     public void update(String id, int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException {
+        Match match = getMatchByIdOrThrowException(id);
 
+        if (match.isFinished()) {
+            throw new InvalidMatchStateException("Update finshed match is not allowed");
+        }
+
+        if (match.getHomeTeamScore() > homeTeamScore || match.getAwayTeamScore() > awayTeamScore) {
+            throw new InvalidMatchStateException("Value is less than current");
+        }
+
+        match.setTeamsScores(homeTeamScore, awayTeamScore);
+
+        matchRepository.update(match);
+    }
+
+    @Override
+    public void finish(String id) throws InvalidMatchStateException {
+        Match match = getMatchByIdOrThrowException(id);
+
+        if (match.isFinished()) {
+            throw new InvalidMatchStateException("Match id:" + id + " is already finished");
+        }
+
+        match.setFinished(true);
+
+        matchRepository.update(match);
+    }
+
+    private Match getMatchByIdOrThrowException(String id) throws InvalidMatchStateException {
+        return matchRepository.fetchById(id)
+                .orElseThrow(() -> new InvalidMatchStateException("Match id: " + id + "is not found"));
     }
 }
