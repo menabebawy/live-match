@@ -56,7 +56,7 @@ class MatchServiceImpl implements MatchService {
             throw new InvalidMatchStateException("Match id:" + id + " is already finished");
         }
 
-        match.setFinished(true);
+        match.setFinished();
 
         matchRepository.update(match);
     }

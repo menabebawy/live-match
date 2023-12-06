@@ -56,8 +56,8 @@ public final class Match {
         this.awayTeamScore = awayTeamScore;
     }
 
-    void setFinished(boolean finished) {
-        this.finished = finished;
+    void setFinished() {
+        this.finished = true;
     }
 
     public void update(int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException {
