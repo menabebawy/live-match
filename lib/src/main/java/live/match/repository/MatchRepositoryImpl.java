@@ -19,6 +19,17 @@ class MatchRepositoryImpl implements MatchRepository {
     }
 
     @Override
+    public void update(Match match) {
+        add(match);
+    }
+
+    @Override
+    public Optional<Match> fetchById(String id) {
+        Match match = matchMap.get(id);
+        return match != null ? Optional.of(match) : Optional.empty();
+    }
+
+    @Override
     public Optional<Match> isTeamPlayingNow(String teamName) {
         return matchMap.values().stream()
                 .filter(match -> !match.isFinished())
