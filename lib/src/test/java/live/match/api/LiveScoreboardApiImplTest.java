@@ -114,14 +114,12 @@ class LiveScoreboardApiImplTest {
 
         Match match2 = liveScoreboardApi.startNewMatch("Spain", "Brazil");
         match2.update(10, 2);
-        System.out.println(match2.getStartedAt());
 
         Match match3 = liveScoreboardApi.startNewMatch("Germany", "France");
         match3.update(2, 2);
 
         Match match4 = liveScoreboardApi.startNewMatch("Uruguay", "Italy");
         match4.update(6, 6);
-        System.out.println(match4.getStartedAt());
 
         Match match5 = liveScoreboardApi.startNewMatch("Argentina", "Australia");
         match5.update(3, 1);
