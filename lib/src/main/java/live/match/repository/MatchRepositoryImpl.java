@@ -22,9 +22,8 @@ class MatchRepositoryImpl implements MatchRepository {
     public Optional<Match> isTeamPlayingNow(String teamName) {
         return matchMap.values().stream()
                 .filter(match -> !match.isFinished())
-                .filter(match -> match.getHomeTeam().name().equalsIgnoreCase(teamName) || match.getAwayTeam()
-                        .name()
-                        .equalsIgnoreCase(teamName))
+                .filter(match -> match.getHomeTeam().name().equalsIgnoreCase(teamName) ||
+                        match.getAwayTeam().name().equalsIgnoreCase(teamName))
                 .findFirst();
     }
 }
