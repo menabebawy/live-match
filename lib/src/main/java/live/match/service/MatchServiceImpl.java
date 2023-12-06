@@ -1,5 +1,6 @@
 package live.match.service;
 
+import live.match.api.InvalidMatchStateException;
 import live.match.api.StartNewMatchException;
 import live.match.repository.MatchRepository;
 
@@ -25,8 +26,13 @@ class MatchServiceImpl implements MatchService {
 
         Team homeTeam = new Team(homeTeamName);
         Team awayTeam = new Team(awayTeamName);
-        Match match = new Match(UUID.randomUUID().toString(), new Date(), homeTeam, awayTeam);
+        Match match = new Match(UUID.randomUUID().toString(), new Date(), homeTeam, awayTeam, this);
         matchRepository.add(match);
         return match;
+    }
+
+    @Override
+    public void update(String id, int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException {
+
     }
 }
