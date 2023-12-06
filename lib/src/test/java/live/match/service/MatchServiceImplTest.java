@@ -62,6 +62,15 @@ class MatchServiceImplTest {
         assertEquals(0, match.getAwayTeamScore());
     }
 
+    @Test
+    void givenFreshStartedMatch_thenAllFieldAreDefault() throws StartNewMatchException {
+        Match match = getStartedMatchBetweenHomeAndAway();
+        assertEquals(0, match.getHomeTeamScore());
+        assertEquals(0, match.getAwayTeamScore());
+        assertEquals(0, match.getScore());
+        assertFalse(match.isFinished());
+    }
+
     private Match getStartedMatchBetweenHomeAndAway() throws StartNewMatchException {
         return matchService.start("HomeTeam", "AwayTeam");
     }
