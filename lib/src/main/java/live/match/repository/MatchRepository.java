@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface MatchRepository {
     void add(Match match);
 
-    Optional<Match> isTeamPlayingNow(String teamId);
+    Optional<Match> isTeamPlayingNow(String teamName);
 
     static MatchRepository createInstant() {
         return new MatchRepositoryImpl();

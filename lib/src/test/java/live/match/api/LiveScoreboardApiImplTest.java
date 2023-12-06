@@ -1,7 +1,6 @@
 package live.match.api;
 
 import live.match.service.Match;
-import live.match.service.Team;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,14 +8,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class LiveScoreboardApiImplTest {
     LiveScoreboardApi liveScoreboardApi;
-    static Team homeTeam = new Team(UUID.randomUUID().toString(), "HomeTeam");
-    static Team awayTeam = new Team(UUID.randomUUID().toString(), "AwayTeam");
+    static final String HOME_TEAM_NAME = "HomeTeam";
+    static final String AWAY_TEAM_NAME = "AwayTeam";
+    static final String SNOW_TEAM_NAME = "SnowTeam";
 
     @BeforeEach
     void setUp() {
@@ -30,7 +28,7 @@ class LiveScoreboardApiImplTest {
 
     @Test
     void givenNoNullTeams_whenStartNewMatch_thenMatchStartedInProgressAndScoreZero() throws StartNewMatchException {
-        Match match = liveScoreboardApi.startNewMatch(homeTeam, awayTeam);
+        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         assertNotNull(match);
         assertEquals(0, match.getScore());
         assertFalse(match.isFinished());
@@ -39,7 +37,7 @@ class LiveScoreboardApiImplTest {
     @Test
     void givenTeamHomeNull_whenStartNewMatch_thenThrowStartNewMatchException() {
         Exception exception = assertThrows(StartNewMatchException.class,
-                                           () -> liveScoreboardApi.startNewMatch(null, awayTeam));
+                                           () -> liveScoreboardApi.startNewMatch(null, AWAY_TEAM_NAME));
 
         assertNotNull(exception);
     }
@@ -47,37 +45,34 @@ class LiveScoreboardApiImplTest {
     @Test
     void givenAwayTeamNull_whenStartNewMatch_thenThrowStartNewMatchException() {
         Exception exception = assertThrows(StartNewMatchException.class,
-                                           () -> liveScoreboardApi.startNewMatch(homeTeam, null));
+                                           () -> liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, null));
         assertNotNull(exception);
     }
 
     @Test
     void givenOccupiedHomeTeam_whenStartNewMatch_thenThrowStartNewMatchException() throws StartNewMatchException {
-        Team snowTeam = new Team(UUID.randomUUID().toString(), "SnowTeam");
-        liveScoreboardApi.startNewMatch(homeTeam, snowTeam);
+        liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, SNOW_TEAM_NAME);
 
         Exception exception = assertThrows(StartNewMatchException.class,
-                                           () -> liveScoreboardApi.startNewMatch(homeTeam, awayTeam));
+                                           () -> liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME));
         assertNotNull(exception);
     }
 
     @Test
     void givenOccupiedAwayTeam_whenStartNewMatch_thenThrowStartNewMatchException() throws StartNewMatchException {
-        Team snowTeam = new Team(UUID.randomUUID().toString(), "SnowTeam");
-        liveScoreboardApi.startNewMatch(snowTeam, awayTeam);
+        liveScoreboardApi.startNewMatch(SNOW_TEAM_NAME, AWAY_TEAM_NAME);
 
         Exception exception = assertThrows(StartNewMatchException.class,
-                                           () -> liveScoreboardApi.startNewMatch(homeTeam, awayTeam));
+                                           () -> liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME));
         assertNotNull(exception);
     }
 
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"  ", "\t", "\n"})
-    void givenHomeTeamNameBlank_whenStartNewMatch_thenThrowStartNewMatchException(String teamName) {
-        Team blankNameTeam = new Team(UUID.randomUUID().toString(), teamName);
+    void givenHomeTeamNameBlank_whenStartNewMatch_thenThrowStartNewMatchException(String blankTeamName) {
         Exception exception = assertThrows(StartNewMatchException.class,
-                                           () -> liveScoreboardApi.startNewMatch(blankNameTeam, awayTeam));
+                                           () -> liveScoreboardApi.startNewMatch(blankTeamName, AWAY_TEAM_NAME));
         assertNotNull(exception);
     }
 }

@@ -19,10 +19,12 @@ class MatchRepositoryImpl implements MatchRepository {
     }
 
     @Override
-    public Optional<Match> isTeamPlayingNow(String teamId) {
+    public Optional<Match> isTeamPlayingNow(String teamName) {
         return matchMap.values().stream()
                 .filter(match -> !match.isFinished())
-                .filter(match -> match.getHomeTeam().id().equals(teamId) || match.getAwayTeam().id().equals(teamId))
+                .filter(match -> match.getHomeTeam().name().equalsIgnoreCase(teamName) || match.getAwayTeam()
+                        .name()
+                        .equalsIgnoreCase(teamName))
                 .findFirst();
     }
 }

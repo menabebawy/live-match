@@ -14,15 +14,17 @@ class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Match start(Team homeTeam, Team awayTeam) throws StartNewMatchException {
-        if (matchRepository.isTeamPlayingNow(homeTeam.id()).isPresent()) {
-            throw new StartNewMatchException(homeTeam.name() + " is currently playing another match");
+    public Match start(String homeTeamName, String awayTeamName) throws StartNewMatchException {
+        if (matchRepository.isTeamPlayingNow(homeTeamName).isPresent()) {
+            throw new StartNewMatchException(homeTeamName + " is currently playing another match");
         }
 
-        if (matchRepository.isTeamPlayingNow(awayTeam.id()).isPresent()) {
-            throw new StartNewMatchException(homeTeam.name() + " is currently playing another match");
+        if (matchRepository.isTeamPlayingNow(awayTeamName).isPresent()) {
+            throw new StartNewMatchException(homeTeamName + " is currently playing another match");
         }
 
+        Team homeTeam = new Team(UUID.randomUUID().toString(), homeTeamName);
+        Team awayTeam = new Team(UUID.randomUUID().toString(), awayTeamName);
         Match match = new Match(UUID.randomUUID().toString(), new Date(), homeTeam, awayTeam);
         matchRepository.add(match);
         return match;
