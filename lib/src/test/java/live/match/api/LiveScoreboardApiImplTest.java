@@ -52,7 +52,20 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenOccupiedHomeTeam_whenStartNewMatch_thenThrowStartNewMatchException() {
+    void givenOccupiedHomeTeam_whenStartNewMatch_thenThrowStartNewMatchException() throws StartNewMatchException {
+        Team snowTeam = new Team(UUID.randomUUID().toString(), "SnowTeam");
+        liveScoreboardApi.startNewMatch(homeTeam, snowTeam);
+
+        Exception exception = assertThrows(StartNewMatchException.class,
+                                           () -> liveScoreboardApi.startNewMatch(homeTeam, awayTeam));
+        assertNotNull(exception);
+    }
+
+    @Test
+    void givenOccupiedAwayTeam_whenStartNewMatch_thenThrowStartNewMatchException() throws StartNewMatchException {
+        Team snowTeam = new Team(UUID.randomUUID().toString(), "SnowTeam");
+        liveScoreboardApi.startNewMatch(snowTeam, awayTeam);
+
         Exception exception = assertThrows(StartNewMatchException.class,
                                            () -> liveScoreboardApi.startNewMatch(homeTeam, awayTeam));
         assertNotNull(exception);
