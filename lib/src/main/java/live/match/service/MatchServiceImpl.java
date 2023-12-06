@@ -23,8 +23,8 @@ class MatchServiceImpl implements MatchService {
             throw new StartNewMatchException(homeTeamName + " is currently playing another match");
         }
 
-        Team homeTeam = new Team(UUID.randomUUID().toString(), homeTeamName);
-        Team awayTeam = new Team(UUID.randomUUID().toString(), awayTeamName);
+        Team homeTeam = new Team(homeTeamName);
+        Team awayTeam = new Team(awayTeamName);
         Match match = new Match(UUID.randomUUID().toString(), new Date(), homeTeam, awayTeam);
         matchRepository.add(match);
         return match;
