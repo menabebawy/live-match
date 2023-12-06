@@ -75,4 +75,65 @@ class LiveScoreboardApiImplTest {
                                            () -> liveScoreboardApi.startNewMatch(blankTeamName, AWAY_TEAM_NAME));
         assertNotNull(exception);
     }
+
+    @Test
+    void givenNonMathsStarted_whenGetScoreboard_thenEmptySummary() {
+        Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
+        assertEquals(0, scoreboard.mathList().size());
+        assertEquals("", scoreboard.getSummary());
+    }
+
+    @Test
+    void givenOneMatch_whenGetScoreboard_thenSummaryOfOneMatch() throws StartNewMatchException {
+        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
+        Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
+        assertEquals(1, scoreboard.mathList().size());
+        assertTrue(scoreboard.getSummary().contains(HOME_TEAM_NAME));
+        assertTrue(scoreboard.getSummary().contains(AWAY_TEAM_NAME));
+    }
+
+    @Test
+    void givenOneFinishedMatch_whenGetScoreboard_thenEmptySummary() throws InvalidMatchStateException, StartNewMatchException {
+        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
+        match.finish();
+        Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
+        assertEquals(0, scoreboard.mathList().size());
+        assertEquals("", scoreboard.getSummary());
+    }
+
+    @Test
+    void givenThreeMatches_whenGetScoreboard_thenCorrectSummary() throws StartNewMatchException, InvalidMatchStateException {
+        Match match1 = liveScoreboardApi.startNewMatch("Home1", "Away1");
+        match1.update(3, 2);
+
+        Match match2 = liveScoreboardApi.startNewMatch("Home2", "Away2");
+        match1.update(1, 1);
+
+        Match match3 = liveScoreboardApi.startNewMatch("Home3", "Away3");
+        match1.update(1, 1);
+
+        String expectedSummary = "build.....";
+
+        Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
+        assertEquals(3, scoreboard.mathList().size());
+        assertEquals(expectedSummary, scoreboard.getSummary());
+    }
+
+    @Test
+    void givenThreeMatches_twoHasSameScore_whenGetScoreboard_thenCorrectSummary() throws StartNewMatchException, InvalidMatchStateException {
+        Match match1 = liveScoreboardApi.startNewMatch("Home1", "Away1");
+        match1.update(3, 2);
+
+        Match match2 = liveScoreboardApi.startNewMatch("Home2", "Away2");
+        match1.update(1, 1);
+
+        Match match3 = liveScoreboardApi.startNewMatch("Home3", "Away3");
+        match1.update(2, 3);
+
+        String expectedSummary = "build.....";
+
+        Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
+        assertEquals(3, scoreboard.mathList().size());
+        assertEquals(expectedSummary, scoreboard.getSummary());
+    }
 }

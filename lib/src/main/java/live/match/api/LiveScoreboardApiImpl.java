@@ -16,6 +16,11 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
         return matchService.start(homeTeamName, awayTeamName);
     }
 
+    @Override
+    public Scoreboard createScoreboard() {
+        return null;
+    }
+
     private void validateParameters(String homeTeamName, String awayTeamName) throws StartNewMatchException {
         if (homeTeamName == null || awayTeamName == null) {
             throw new StartNewMatchException("team/s names should not be null");
