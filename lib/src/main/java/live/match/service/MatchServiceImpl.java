@@ -1,10 +1,12 @@
 package live.match.service;
 
 import live.match.api.InvalidMatchStateException;
+import live.match.api.Scoreboard;
 import live.match.api.StartNewMatchException;
 import live.match.repository.MatchRepository;
 
-import java.util.Date;
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 
 class MatchServiceImpl implements MatchService {
@@ -26,7 +28,7 @@ class MatchServiceImpl implements MatchService {
 
         Team homeTeam = new Team(homeTeamName);
         Team awayTeam = new Team(awayTeamName);
-        Match match = new Match(UUID.randomUUID().toString(), new Date(), homeTeam, awayTeam, this);
+        Match match = new Match(UUID.randomUUID().toString(), System.nanoTime(), homeTeam, awayTeam, this);
         matchRepository.add(match);
         return match;
     }
@@ -64,5 +66,13 @@ class MatchServiceImpl implements MatchService {
     private Match getMatchByIdOrThrowException(String id) throws InvalidMatchStateException {
         return matchRepository.fetchById(id)
                 .orElseThrow(() -> new InvalidMatchStateException("Match id: " + id + "is not found"));
+    }
+
+    @Override
+    public Scoreboard createSoretedScoreboard() {
+        List<Match> inProgressMatches = matchRepository.fetchAllInProgress().stream()
+                .sorted(Comparator.comparing(Match::getScore).thenComparing(Match::getStartedAt).reversed())
+                .toList();
+        return new Scoreboard(inProgressMatches);
     }
 }
