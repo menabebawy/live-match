@@ -6,7 +6,7 @@ import live.match.service.MatchService;
 public class LiveScoreboardApiImpl implements LiveScoreboardApi {
     private final MatchService matchService;
 
-    public LiveScoreboardApiImpl(MatchService matchService) {
+    LiveScoreboardApiImpl(MatchService matchService) {
         this.matchService = matchService;
     }
 
