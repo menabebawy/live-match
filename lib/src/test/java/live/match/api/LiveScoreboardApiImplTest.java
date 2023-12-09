@@ -38,7 +38,6 @@ class LiveScoreboardApiImplTest {
     void givenTeamHomeNull_whenStartNewMatch_thenThrowStartNewMatchException() {
         Exception exception = assertThrows(StartNewMatchException.class,
                                            () -> liveScoreboardApi.startNewMatch(null, AWAY_TEAM_NAME));
-
         assertNotNull(exception);
     }
 
@@ -77,13 +76,6 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenNonMathsStarted_whenGetScoreboard_thenEmptySummary() {
-        Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
-        assertEquals(0, scoreboard.mathList().size());
-        assertEquals("", scoreboard.getSummary());
-    }
-
-    @Test
     void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         match.finish();
@@ -93,7 +85,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenNotStartedMatchYet_whenUpdateMatch_thenThrowInvalidMatchStateException() {
+    void givenNotStartedMatchYet_whenUpdateMatch_thenThrowMatchNotFoundException() {
         Exception exception = assertThrows(MatchNotFoundException.class,
                                            () -> liveScoreboardApi.updateMatch("id", 1, 0));
         assertNotNull(exception);
@@ -125,6 +117,35 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
+    void givenAlreadyFinishedMatchId_whenFinishMatch_thenThrowsInvalidMatchStateException() {
+        Exception exception = assertThrows(MatchNotFoundException.class, () -> liveScoreboardApi.finishMatch("id"));
+        assertNotNull(exception);
+    }
+
+    @Test
+    void givenNotFoundMatchId_whenFinishMatch_thenThrowsMatchNotFoundException() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
+        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
+        liveScoreboardApi.finishMatch(match.getId());
+        Exception exception = assertThrows(InvalidMatchStateException.class,
+                                           () -> liveScoreboardApi.finishMatch(match.getId()));
+        assertNotNull(exception);
+    }
+
+    @Test
+    void givenInProgressMatchId_whenFinishMatch_thenFinishMatch() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
+        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
+        Match finishedMatch = liveScoreboardApi.finishMatch(match.getId());
+        assertTrue(finishedMatch.isFinished());
+    }
+
+    @Test
+    void givenNonMathsStarted_whenGetScoreboard_thenEmptySummary() {
+        Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
+        assertEquals(0, scoreboard.mathList().size());
+        assertEquals("", scoreboard.getSummary());
+    }
+
+    @Test
     void givenOneMatch_whenGetScoreboard_thenSummaryOfOneMatch() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
         Match match = liveScoreboardApi.startNewMatch("Mexico", "Canada");
         liveScoreboardApi.updateMatch(match.getId(), 1, 0);
@@ -146,28 +167,6 @@ class LiveScoreboardApiImplTest {
         Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
         assertEquals(0, scoreboard.mathList().size());
         assertEquals("", scoreboard.getSummary());
-    }
-
-    @Test
-    void givenAlreadyFinishedMatchId_whenFinishMatch_thenThrowsInvalidMatchStateException() {
-        Exception exception = assertThrows(MatchNotFoundException.class, () -> liveScoreboardApi.finishMatch("id"));
-        assertNotNull(exception);
-    }
-
-    @Test
-    void givenNotFoundMatchId_whenFinishMatch_thenThrowsMatchNotFoundException() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
-        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
-        liveScoreboardApi.finishMatch(match.getId());
-        Exception exception = assertThrows(InvalidMatchStateException.class,
-                                           () -> liveScoreboardApi.finishMatch(match.getId()));
-        assertNotNull(exception);
-    }
-
-    @Test
-    void givenInProgressMatchId_whenFinishMatch_thenFinishMatch() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
-        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
-        Match finishedMatch = liveScoreboardApi.finishMatch(match.getId());
-        assertTrue(finishedMatch.isFinished());
     }
 
     @Test
