@@ -6,25 +6,30 @@ import live.match.api.Scoreboard;
 import live.match.api.StartNewMatchException;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 class MatchServiceImpl implements MatchService {
     private final Map<String, Match> matchMap = new HashMap<>();
 
     @Override
     public Match start(String homeTeamName, String awayTeamName) throws StartNewMatchException {
-        if (isTeamPlayingNow(homeTeamName).isPresent()) {
-            throw new StartNewMatchException(homeTeamName + " is currently playing another match");
-        }
-
-        if (isTeamPlayingNow(awayTeamName).isPresent()) {
-            throw new StartNewMatchException(homeTeamName + " is currently playing another match");
-        }
-
+        validateIfTeamsOccupied(homeTeamName, awayTeamName);
         Team homeTeam = new Team(homeTeamName);
         Team awayTeam = new Team(awayTeamName);
         Match match = new Match(UUID.randomUUID().toString(), System.nanoTime(), homeTeam, awayTeam, this);
         matchMap.put(match.getId(), match);
         return match;
+    }
+
+    private void validateIfTeamsOccupied(String homeTeamName, String awayTeamName) throws StartNewMatchException {
+        List<String> occupiedTeamsList = getOccupiedTeamsNames();
+        if (occupiedTeamsList.contains(homeTeamName)) {
+            throw new StartNewMatchException(homeTeamName + " is currently playing another match");
+        }
+
+        if (occupiedTeamsList.contains(awayTeamName)) {
+            throw new StartNewMatchException(homeTeamName + " is currently playing another match");
+        }
     }
 
     @Override
@@ -80,11 +85,10 @@ class MatchServiceImpl implements MatchService {
         return new Scoreboard(inProgressMatches);
     }
 
-    private Optional<Match> isTeamPlayingNow(String teamName) {
+    private List<String> getOccupiedTeamsNames() {
         return getInProgressMatches().stream()
-                .filter(match -> match.getHomeTeam().name().equalsIgnoreCase(teamName) ||
-                        match.getAwayTeam().name().equalsIgnoreCase(teamName))
-                .findFirst();
+                .flatMap(match -> Stream.of(match.getHomeTeam().name(), match.getAwayTeam().name()))
+                .toList();
     }
 
     private List<Match> getInProgressMatches() {
