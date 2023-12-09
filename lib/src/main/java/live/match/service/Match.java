@@ -1,8 +1,5 @@
 package live.match.service;
 
-import live.match.api.InvalidMatchStateException;
-import live.match.api.MatchNotFoundException;
-
 public final class Match {
     private final String id;
     private final long startedAt;
@@ -12,14 +9,11 @@ public final class Match {
     private int awayTeamScore;
     private boolean finished;
 
-    private final MatchService matchService;
-
-    Match(String id, long startedAt, Team homeTeam, Team awayTeam, MatchService matchService) {
+    Match(String id, long startedAt, Team homeTeam, Team awayTeam) {
         this.id = id;
         this.startedAt = startedAt;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
-        this.matchService = matchService;
     }
 
     public String getId() {
@@ -61,9 +55,5 @@ public final class Match {
 
     void setFinished() {
         this.finished = true;
-    }
-
-    public void finish() throws InvalidMatchStateException, MatchNotFoundException {
-        matchService.finish(id);
     }
 }

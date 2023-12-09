@@ -90,7 +90,7 @@ class LiveScoreboardApiImplTest {
     @Test
     void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
-        match.finish();
+        liveScoreboardApi.finishMatch(match.getId());
         Exception exception = assertThrows(InvalidMatchStateException.class,
                                            () -> liveScoreboardApi.updateMatch(match.getId(), 0, 1));
         assertNotNull(exception);
@@ -191,7 +191,7 @@ class LiveScoreboardApiImplTest {
     @Test
     void givenOneFinishedMatch_whenGetScoreboard_thenEmptySummary() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
-        match.finish();
+        liveScoreboardApi.finishMatch(match.getId());
         Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
         assertEquals(0, scoreboard.mathList().size());
         assertEquals("", scoreboard.getSummary());

@@ -39,7 +39,7 @@ class MatchServiceImplTest {
     @Test
     void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
         Match match = getStartedMatchBetweenHomeAndAway();
-        match.finish();
+        matchService.finish(match.getId());
         Exception exception = assertThrows(InvalidMatchStateException.class,
                                            () -> matchService.update(match.getId(), 2, 0));
         assertNotNull(exception);
@@ -47,7 +47,7 @@ class MatchServiceImplTest {
 
     @Test
     void givenNotStartedMatchYet_whenUpdateMatch_thenThrowMatchNotFoundException() {
-        Match match = new Match("id", System.nanoTime(), new Team("Team1"), new Team("Team2"), matchService);
+        Match match = new Match("id", System.nanoTime(), new Team("Team1"), new Team("Team2"));
         Exception exception = assertThrows(MatchNotFoundException.class,
                                            () -> matchService.update(match.getId(), 1, 0));
         assertNotNull(exception);
