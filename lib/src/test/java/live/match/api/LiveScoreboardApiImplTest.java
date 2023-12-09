@@ -26,6 +26,7 @@ class LiveScoreboardApiImplTest {
         liveScoreboardApi = null;
     }
 
+    // region start new match
     @Test
     void givenNoNullTeams_whenStartNewMatch_thenMatchStartedInProgressAndScoreZero() throws StartNewMatchException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
@@ -82,6 +83,10 @@ class LiveScoreboardApiImplTest {
         assertNotNull(exception);
     }
 
+    // endregion
+
+    // region update match
+
     @Test
     void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
@@ -123,6 +128,10 @@ class LiveScoreboardApiImplTest {
         assertEquals(0, updatedMatch.getAwayTeamScore());
     }
 
+    // endregion
+
+    // region finish match
+
     @Test
     void givenAlreadyFinishedMatchId_whenFinishMatch_thenThrowsInvalidMatchStateException() {
         Exception exception = assertThrows(MatchNotFoundException.class, () -> liveScoreboardApi.finishMatch("id"));
@@ -152,6 +161,10 @@ class LiveScoreboardApiImplTest {
         Match finishedMatch = liveScoreboardApi.finishMatch(match.getId());
         assertTrue(finishedMatch.isFinished());
     }
+
+    // endregion
+
+    // region get scoreboard
 
     @Test
     void givenNonMathsStarted_whenGetScoreboard_thenEmptySummary() {
@@ -212,4 +225,6 @@ class LiveScoreboardApiImplTest {
 
         assertEquals(expectedSummary, scoreboard.getSummary());
     }
+
+    // end region
 }
