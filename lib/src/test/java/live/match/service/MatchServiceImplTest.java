@@ -22,6 +22,20 @@ class MatchServiceImplTest {
         matchService = null;
     }
 
+    // region start match
+
+    @Test
+    void givenFreshStartedMatch_thenAllFieldAreDefault() throws StartNewMatchException {
+        Match match = getStartedMatchBetweenHomeAndAway();
+        assertEquals(0, match.getHomeTeamScore());
+        assertEquals(0, match.getAwayTeamScore());
+        assertEquals(0, match.getScore());
+        assertFalse(match.isFinished());
+    }
+
+    // endregion
+
+    // region update match
     @Test
     void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
         Match match = getStartedMatchBetweenHomeAndAway();
@@ -65,15 +79,9 @@ class MatchServiceImplTest {
         assertEquals(0, updatedMatch.getAwayTeamScore());
     }
 
-    @Test
-    void givenFreshStartedMatch_thenAllFieldAreDefault() throws StartNewMatchException {
-        Match match = getStartedMatchBetweenHomeAndAway();
-        assertEquals(0, match.getHomeTeamScore());
-        assertEquals(0, match.getAwayTeamScore());
-        assertEquals(0, match.getScore());
-        assertFalse(match.isFinished());
-    }
+    // endregion
 
+    // region finish match
     @Test
     void givenFinishedMatchId_whenFinishMatch_thenInvalidMatchStateException() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
         Match match = getStartedMatchBetweenHomeAndAway();
@@ -98,4 +106,6 @@ class MatchServiceImplTest {
     private Match getStartedMatchBetweenHomeAndAway() throws StartNewMatchException {
         return matchService.start("HomeTeam", "AwayTeam");
     }
+
+    // endregion
 }
