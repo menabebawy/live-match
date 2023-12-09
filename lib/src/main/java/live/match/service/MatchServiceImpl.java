@@ -51,7 +51,8 @@ class MatchServiceImpl implements MatchService {
         return match;
     }
 
-    private static void validateUpdatedScores(Match match, int homeTeamUpdatedScore,
+    private static void validateUpdatedScores(Match match,
+                                              int homeTeamUpdatedScore,
                                               int awayTeamUpdatedScore) throws InvalidMatchStateException {
         if (match.getHomeTeamScore() > homeTeamUpdatedScore || match.getAwayTeamScore() > awayTeamUpdatedScore) {
             throw new InvalidMatchStateException("Value is less than current");
