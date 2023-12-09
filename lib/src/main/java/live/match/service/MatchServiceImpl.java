@@ -68,8 +68,11 @@ class MatchServiceImpl implements MatchService {
     }
 
     private Match getMatchByIdOrThrowException(String id) throws MatchNotFoundException {
-        return fetchById(id)
-                .orElseThrow(() -> new MatchNotFoundException("Match id: " + id + "is not found"));
+        Match match = matchMap.get(id);
+        if (match == null) {
+            throw new MatchNotFoundException("Match id: " + id + "is not found");
+        }
+        return match;
     }
 
     @Override
@@ -78,11 +81,6 @@ class MatchServiceImpl implements MatchService {
                 .sorted(Comparator.comparing(Match::getScore).thenComparing(Match::getStartedAt).reversed())
                 .toList();
         return new Scoreboard(inProgressMatches);
-    }
-
-    private Optional<Match> fetchById(String id) {
-        Match match = matchMap.get(id);
-        return match != null ? Optional.of(match) : Optional.empty();
     }
 
     private List<Match> fetchAllInProgress() {
