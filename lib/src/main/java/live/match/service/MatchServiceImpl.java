@@ -6,31 +6,31 @@ import live.match.api.Scoreboard;
 import live.match.api.StartNewMatchException;
 import live.match.repository.MatchRepository;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 class MatchServiceImpl implements MatchService {
+    private final Map<String, Match> matchMap;
     private final MatchRepository matchRepository;
 
     MatchServiceImpl(MatchRepository matchRepository) {
         this.matchRepository = matchRepository;
+        matchMap = new HashMap<>();
     }
 
     @Override
     public Match start(String homeTeamName, String awayTeamName) throws StartNewMatchException {
-        if (matchRepository.isTeamPlayingNow(homeTeamName).isPresent()) {
+        if (isTeamPlayingNow(homeTeamName).isPresent()) {
             throw new StartNewMatchException(homeTeamName + " is currently playing another match");
         }
 
-        if (matchRepository.isTeamPlayingNow(awayTeamName).isPresent()) {
+        if (isTeamPlayingNow(awayTeamName).isPresent()) {
             throw new StartNewMatchException(homeTeamName + " is currently playing another match");
         }
 
         Team homeTeam = new Team(homeTeamName);
         Team awayTeam = new Team(awayTeamName);
         Match match = new Match(UUID.randomUUID().toString(), System.nanoTime(), homeTeam, awayTeam, this);
-        matchRepository.add(match);
+        matchMap.put(match.getId(), match);
         return match;
     }
 
@@ -50,7 +50,7 @@ class MatchServiceImpl implements MatchService {
 
         match.setTeamsScores(homeTeamScore, awayTeamScore);
 
-        matchRepository.update(match);
+        matchMap.put(match.getId(), match);
 
         return match;
     }
@@ -65,21 +65,40 @@ class MatchServiceImpl implements MatchService {
 
         match.setFinished();
 
-        matchRepository.update(match);
+        matchMap.put(match.getId(), match);
 
         return match;
     }
 
     private Match getMatchByIdOrThrowException(String id) throws MatchNotFoundException {
-        return matchRepository.fetchById(id)
+        return fetchById(id)
                 .orElseThrow(() -> new MatchNotFoundException("Match id: " + id + "is not found"));
     }
 
     @Override
     public Scoreboard createSoretedScoreboard() {
-        List<Match> inProgressMatches = matchRepository.fetchAllInProgress().stream()
+        List<Match> inProgressMatches = fetchAllInProgress().stream()
                 .sorted(Comparator.comparing(Match::getScore).thenComparing(Match::getStartedAt).reversed())
                 .toList();
         return new Scoreboard(inProgressMatches);
+    }
+
+    private Optional<Match> fetchById(String id) {
+        Match match = matchMap.get(id);
+        return match != null ? Optional.of(match) : Optional.empty();
+    }
+
+    private List<Match> fetchAllInProgress() {
+        return matchMap.values().stream()
+                .filter(match -> !match.isFinished())
+                .toList();
+    }
+
+    private Optional<Match> isTeamPlayingNow(String teamName) {
+        return matchMap.values().stream()
+                .filter(match -> !match.isFinished())
+                .filter(match -> match.getHomeTeam().name().equalsIgnoreCase(teamName) ||
+                        match.getAwayTeam().name().equalsIgnoreCase(teamName))
+                .findFirst();
     }
 }
