@@ -8,11 +8,7 @@ import live.match.api.StartNewMatchException;
 import java.util.*;
 
 class MatchServiceImpl implements MatchService {
-    private final Map<String, Match> matchMap;
-
-    MatchServiceImpl() {
-        matchMap = new HashMap<>();
-    }
+    private final Map<String, Match> matchMap = new HashMap<>();
 
     @Override
     public Match start(String homeTeamName, String awayTeamName) throws StartNewMatchException {
