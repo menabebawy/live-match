@@ -100,9 +100,8 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenTeamScoreLessThanZero_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException {
+    void givenTeamScoreLessThanZero_whenUpdateMatch_thenThrowInvalidMatchStateException() throws StartNewMatchException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
-        liveScoreboardApi.updateMatch(match.getId(), 2, 0);
         Exception exception = assertThrows(InvalidMatchStateException.class,
                                            () -> liveScoreboardApi.updateMatch(match.getId(), 2, -1));
         assertNotNull(exception);
