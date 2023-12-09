@@ -41,7 +41,7 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
             throw new StartNewMatchException("team/s names should not be null");
         }
 
-        if (homeTeamName.isBlank() || awayTeamName.isBlank()) {
+        if (homeTeamName.trim().isBlank() || awayTeamName.trim().isBlank()) {
             throw new StartNewMatchException("team/s names should not be blank");
         }
     }

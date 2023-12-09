@@ -14,8 +14,8 @@ class MatchServiceImpl implements MatchService {
     @Override
     public Match start(String homeTeamName, String awayTeamName) throws StartNewMatchException {
         validateIfTeamsOccupied(homeTeamName, awayTeamName);
-        Team homeTeam = new Team(homeTeamName);
-        Team awayTeam = new Team(awayTeamName);
+        Team homeTeam = new Team(homeTeamName.trim());
+        Team awayTeam = new Team(awayTeamName.trim());
         Match match = new Match(UUID.randomUUID().toString(), System.nanoTime(), homeTeam, awayTeam, this);
         matchMap.put(match.getId(), match);
         return match;
@@ -46,7 +46,9 @@ class MatchServiceImpl implements MatchService {
 
         match.setTeamsScores(homeTeamScore, awayTeamScore);
 
-        return matchMap.put(match.getId(), match);
+        matchMap.put(match.getId(), match);
+
+        return match;
     }
 
     private static void validateUpdatedScores(Match match, int homeTeamUpdatedScore,

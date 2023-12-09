@@ -35,6 +35,13 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
+    void givenTeamsNamesSurroundWhitespace_whenStartNewMatch_thenTrimNames() throws StartNewMatchException {
+        Match match = liveScoreboardApi.startNewMatch(" " + HOME_TEAM_NAME + "   ", AWAY_TEAM_NAME);
+        assertNotNull(match);
+        assertEquals(HOME_TEAM_NAME, match.getHomeTeam().name());
+    }
+
+    @Test
     void givenTeamHomeNull_whenStartNewMatch_thenThrowStartNewMatchException() {
         Exception exception = assertThrows(StartNewMatchException.class,
                                            () -> liveScoreboardApi.startNewMatch(null, AWAY_TEAM_NAME));
