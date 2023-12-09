@@ -34,7 +34,7 @@ class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public void update(String id, int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException {
+    public Match update(String id, int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException {
         Match match = getMatchByIdOrThrowException(id);
 
         if (match.isFinished()) {
@@ -48,6 +48,8 @@ class MatchServiceImpl implements MatchService {
         match.setTeamsScores(homeTeamScore, awayTeamScore);
 
         matchRepository.update(match);
+
+        return match;
     }
 
     @Override
