@@ -26,7 +26,7 @@ public final class Match {
         return id;
     }
 
-    public long getStartedAt() {
+    long getStartedAt() {
         return startedAt;
     }
 
