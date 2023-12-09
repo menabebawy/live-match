@@ -43,9 +43,7 @@ class MatchServiceImpl implements MatchService {
 
         match.setTeamsScores(homeTeamScore, awayTeamScore);
 
-        matchMap.put(match.getId(), match);
-
-        return match;
+        return matchMap.put(match.getId(), match);
     }
 
     @Override
@@ -58,9 +56,7 @@ class MatchServiceImpl implements MatchService {
 
         match.setFinished();
 
-        matchMap.put(match.getId(), match);
-
-        return match;
+        return matchMap.put(match.getId(), match);
     }
 
     private Match getMatchByIdOrThrowException(String id) throws MatchNotFoundException {
