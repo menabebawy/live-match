@@ -129,6 +129,14 @@ class LiveScoreboardApiImplTest {
         assertNotNull(exception);
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"  ", "\t", "\n"})
+    void givenInvalidMatchId_whenFinishMatch_thenThrowsInvalidMatchStateException(String id) {
+        Exception exception = assertThrows(InvalidMatchStateException.class, () -> liveScoreboardApi.finishMatch(id));
+        assertNotNull(exception);
+    }
+
     @Test
     void givenNotFoundMatchId_whenFinishMatch_thenThrowsMatchNotFoundException() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
