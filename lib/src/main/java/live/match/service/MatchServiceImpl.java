@@ -1,6 +1,7 @@
 package live.match.service;
 
 import live.match.api.InvalidMatchStateException;
+import live.match.api.MatchNotFoundException;
 import live.match.api.Scoreboard;
 import live.match.api.StartNewMatchException;
 import live.match.repository.MatchRepository;
@@ -34,11 +35,13 @@ class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Match update(String id, int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException {
+    public Match update(String id,
+                        int homeTeamScore,
+                        int awayTeamScore) throws InvalidMatchStateException, MatchNotFoundException {
         Match match = getMatchByIdOrThrowException(id);
 
         if (match.isFinished()) {
-            throw new InvalidMatchStateException("Update finshed match is not allowed");
+            throw new InvalidMatchStateException("Update finished match is not allowed");
         }
 
         if (match.getHomeTeamScore() > homeTeamScore || match.getAwayTeamScore() > awayTeamScore) {
@@ -53,21 +56,23 @@ class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public void finish(String id) throws InvalidMatchStateException {
+    public Match finish(String id) throws InvalidMatchStateException, MatchNotFoundException {
         Match match = getMatchByIdOrThrowException(id);
 
         if (match.isFinished()) {
-            throw new InvalidMatchStateException("Match id:" + id + " is already finished");
+            throw new InvalidMatchStateException("Match id: " + id + " is already finished");
         }
 
         match.setFinished();
 
         matchRepository.update(match);
+
+        return match;
     }
 
-    private Match getMatchByIdOrThrowException(String id) throws InvalidMatchStateException {
+    private Match getMatchByIdOrThrowException(String id) throws MatchNotFoundException {
         return matchRepository.fetchById(id)
-                .orElseThrow(() -> new InvalidMatchStateException("Match id: " + id + "is not found"));
+                .orElseThrow(() -> new MatchNotFoundException("Match id: " + id + "is not found"));
     }
 
     @Override

@@ -17,11 +17,18 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
     }
 
     @Override
-    public Match updateMatch(String id, int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException {
+    public Match updateMatch(String id,
+                             int homeTeamScore,
+                             int awayTeamScore) throws InvalidMatchStateException, MatchNotFoundException {
         if (homeTeamScore < 0 || awayTeamScore < 0) {
             throw new InvalidMatchStateException("score less than zero is not allowed");
         }
         return matchService.update(id, homeTeamScore, awayTeamScore);
+    }
+
+    @Override
+    public Match finishMatch(String id) throws InvalidMatchStateException, MatchNotFoundException {
+        return matchService.finish(id);
     }
 
     @Override
