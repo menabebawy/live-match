@@ -1,6 +1,7 @@
 package live.match.service;
 
 import live.match.api.InvalidMatchStateException;
+import live.match.api.MatchNotFoundException;
 
 public final class Match {
     private final String id;
@@ -62,7 +63,7 @@ public final class Match {
         this.finished = true;
     }
 
-    public void finish() throws InvalidMatchStateException {
+    public void finish() throws InvalidMatchStateException, MatchNotFoundException {
         matchService.finish(id);
     }
 }

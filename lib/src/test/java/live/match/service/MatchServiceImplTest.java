@@ -1,6 +1,7 @@
 package live.match.service;
 
 import live.match.api.InvalidMatchStateException;
+import live.match.api.MatchNotFoundException;
 import live.match.api.StartNewMatchException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException {
+    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
         Match match = getStartedMatchBetweenHomeAndAway();
         match.finish();
         Exception exception = assertThrows(InvalidMatchStateException.class,
@@ -33,13 +34,13 @@ class MatchServiceImplTest {
     @Test
     void givenNotStartedMatchYet_whenUpdateMatch_thenThrowInvalidMatchStateException() {
         Match match = new Match("id", System.nanoTime(), new Team("Team1"), new Team("Team2"), matchService);
-        Exception exception = assertThrows(InvalidMatchStateException.class,
+        Exception exception = assertThrows(MatchNotFoundException.class,
                                            () -> matchService.update(match.getId(), 1, 0));
         assertNotNull(exception);
     }
 
     @Test
-    void givenTeamScoreLessThanZero_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException {
+    void givenTeamScoreLessThanZero_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.update(match.getId(), 2, 0);
         Exception exception = assertThrows(InvalidMatchStateException.class,
@@ -48,7 +49,7 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException {
+    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.update(match.getId(), 2, 0);
         Exception exception = assertThrows(InvalidMatchStateException.class,
@@ -57,7 +58,7 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws InvalidMatchStateException, StartNewMatchException {
+    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.update(match.getId(), 1, 0);
         assertEquals(1, match.getHomeTeamScore());
