@@ -16,7 +16,7 @@ class MatchServiceImpl implements MatchService {
         validateIfTeamsOccupied(homeTeamName, awayTeamName);
         Team homeTeam = new Team(homeTeamName.trim());
         Team awayTeam = new Team(awayTeamName.trim());
-        Match match = new Match(UUID.randomUUID().toString(), System.nanoTime(), homeTeam, awayTeam, this);
+        Match match = new Match(UUID.randomUUID().toString(), System.nanoTime(), homeTeam, awayTeam);
         matchMap.put(match.getId(), match);
         return match;
     }
