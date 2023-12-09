@@ -77,23 +77,20 @@ class MatchServiceImpl implements MatchService {
 
     @Override
     public Scoreboard createSoretedScoreboard() {
-        List<Match> inProgressMatches = fetchAllInProgress().stream()
+        List<Match> inProgressMatches = getInProgressMatches().stream()
                 .sorted(Comparator.comparing(Match::getScore).thenComparing(Match::getStartedAt).reversed())
                 .toList();
         return new Scoreboard(inProgressMatches);
     }
 
-    private List<Match> fetchAllInProgress() {
-        return matchMap.values().stream()
-                .filter(match -> !match.isFinished())
-                .toList();
-    }
-
     private Optional<Match> isTeamPlayingNow(String teamName) {
-        return matchMap.values().stream()
-                .filter(match -> !match.isFinished())
+        return getInProgressMatches().stream()
                 .filter(match -> match.getHomeTeam().name().equalsIgnoreCase(teamName) ||
                         match.getAwayTeam().name().equalsIgnoreCase(teamName))
                 .findFirst();
+    }
+
+    private List<Match> getInProgressMatches() {
+        return matchMap.values().stream().filter(match -> !match.isFinished()).toList();
     }
 }
