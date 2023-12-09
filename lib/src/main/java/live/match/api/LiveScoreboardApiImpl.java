@@ -28,6 +28,9 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
 
     @Override
     public Match finishMatch(String id) throws InvalidMatchStateException, MatchNotFoundException {
+        if (id == null || id.trim().isBlank()) {
+            throw new InvalidMatchStateException("id should not be null or blank");
+        }
         return matchService.finish(id);
     }
 
