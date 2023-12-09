@@ -74,6 +74,27 @@ class MatchServiceImplTest {
         assertFalse(match.isFinished());
     }
 
+    @Test
+    void givenFinishedMatchId_whenFinishMatch_thenInvalidMatchStateException() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
+        Match match = getStartedMatchBetweenHomeAndAway();
+        matchService.finish(match.getId());
+        Exception exception = assertThrows(InvalidMatchStateException.class, () -> matchService.finish(match.getId()));
+        assertNotNull(exception);
+    }
+
+    @Test
+    void givenNotFoundMatchId_whenFinishMatch_thenMatchNotFoundException() {
+        Exception exception = assertThrows(MatchNotFoundException.class, () -> matchService.finish("id"));
+        assertNotNull(exception);
+    }
+
+    @Test
+    void givenInProgressMatchId_whenFinishMatch_thenMatchFinisher() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
+        Match match = getStartedMatchBetweenHomeAndAway();
+        Match finishedMatch = matchService.finish(match.getId());
+        assertTrue(finishedMatch.isFinished());
+    }
+
     private Match getStartedMatchBetweenHomeAndAway() throws StartNewMatchException {
         return matchService.start("HomeTeam", "AwayTeam");
     }
