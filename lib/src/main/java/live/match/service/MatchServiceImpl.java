@@ -4,16 +4,13 @@ import live.match.api.InvalidMatchStateException;
 import live.match.api.MatchNotFoundException;
 import live.match.api.Scoreboard;
 import live.match.api.StartNewMatchException;
-import live.match.repository.MatchRepository;
 
 import java.util.*;
 
 class MatchServiceImpl implements MatchService {
     private final Map<String, Match> matchMap;
-    private final MatchRepository matchRepository;
 
-    MatchServiceImpl(MatchRepository matchRepository) {
-        this.matchRepository = matchRepository;
+    MatchServiceImpl() {
         matchMap = new HashMap<>();
     }
 
