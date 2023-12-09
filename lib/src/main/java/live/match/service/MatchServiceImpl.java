@@ -37,13 +37,18 @@ class MatchServiceImpl implements MatchService {
             throw new InvalidMatchStateException("Update finished match is not allowed");
         }
 
-        if (match.getHomeTeamScore() > homeTeamScore || match.getAwayTeamScore() > awayTeamScore) {
-            throw new InvalidMatchStateException("Value is less than current");
-        }
+        validateUpdatedScores(match, homeTeamScore, awayTeamScore);
 
         match.setTeamsScores(homeTeamScore, awayTeamScore);
 
         return matchMap.put(match.getId(), match);
+    }
+
+    private static void validateUpdatedScores(Match match, int homeTeamUpdatedScore,
+                                              int awayTeamUpdatedScore) throws InvalidMatchStateException {
+        if (match.getHomeTeamScore() > homeTeamUpdatedScore || match.getAwayTeamScore() > awayTeamUpdatedScore) {
+            throw new InvalidMatchStateException("Value is less than current");
+        }
     }
 
     @Override
