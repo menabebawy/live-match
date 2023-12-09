@@ -17,6 +17,11 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
     }
 
     @Override
+    public Match updateMatch(String id, int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException {
+        return matchService.update(id, homeTeamScore, awayTeamScore);
+    }
+
+    @Override
     public Scoreboard createScoreboard() {
         return matchService.createSoretedScoreboard();
     }

@@ -25,37 +25,41 @@ class MatchServiceImplTest {
     void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException {
         Match match = getStartedMatchBetweenHomeAndAway();
         match.finish();
-        Exception exception = assertThrows(InvalidMatchStateException.class, () -> match.update(2, 0));
+        Exception exception = assertThrows(InvalidMatchStateException.class,
+                                           () -> matchService.update(match.getId(), 2, 0));
         assertNotNull(exception);
     }
 
     @Test
     void givenNotStartedMatchYet_whenUpdateMatch_thenThrowInvalidMatchStateException() {
         Match match = new Match("id", System.nanoTime(), new Team("Team1"), new Team("Team2"), matchService);
-        Exception exception = assertThrows(InvalidMatchStateException.class, () -> match.update(1, 0));
+        Exception exception = assertThrows(InvalidMatchStateException.class,
+                                           () -> matchService.update(match.getId(), 1, 0));
         assertNotNull(exception);
     }
 
     @Test
     void givenTeamScoreLessThanZero_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException {
         Match match = getStartedMatchBetweenHomeAndAway();
-        match.update(2, 0);
-        Exception exception = assertThrows(InvalidMatchStateException.class, () -> match.update(2, -1));
+        matchService.update(match.getId(), 2, 0);
+        Exception exception = assertThrows(InvalidMatchStateException.class,
+                                           () -> matchService.update(match.getId(), 2, -1));
         assertNotNull(exception);
     }
 
     @Test
     void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException {
         Match match = getStartedMatchBetweenHomeAndAway();
-        match.update(2, 0);
-        Exception exception = assertThrows(InvalidMatchStateException.class, () -> match.update(0, 1));
+        matchService.update(match.getId(), 2, 0);
+        Exception exception = assertThrows(InvalidMatchStateException.class,
+                                           () -> matchService.update(match.getId(), 0, 1));
         assertNotNull(exception);
     }
 
     @Test
     void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws InvalidMatchStateException, StartNewMatchException {
         Match match = getStartedMatchBetweenHomeAndAway();
-        match.update(1, 0);
+        matchService.update(match.getId(), 1, 0);
         assertEquals(1, match.getHomeTeamScore());
         assertEquals(0, match.getAwayTeamScore());
     }

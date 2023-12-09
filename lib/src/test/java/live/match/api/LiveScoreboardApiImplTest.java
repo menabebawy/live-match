@@ -84,12 +84,54 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
+    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException {
+        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
+        match.finish();
+        Exception exception = assertThrows(InvalidMatchStateException.class,
+                                           () -> liveScoreboardApi.updateMatch(match.getId(), 0, 1));
+        assertNotNull(exception);
+    }
+
+    @Test
+    void givenNotStartedMatchYet_whenUpdateMatch_thenThrowInvalidMatchStateException() {
+        Exception exception = assertThrows(InvalidMatchStateException.class,
+                                           () -> liveScoreboardApi.updateMatch("id", 1, 0));
+        assertNotNull(exception);
+    }
+
+    @Test
+    void givenTeamScoreLessThanZero_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException {
+        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
+        liveScoreboardApi.updateMatch(match.getId(), 2, 0);
+        Exception exception = assertThrows(InvalidMatchStateException.class,
+                                           () -> liveScoreboardApi.updateMatch(match.getId(), 2, -1));
+        assertNotNull(exception);
+    }
+
+    @Test
+    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException {
+        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
+        liveScoreboardApi.updateMatch(match.getId(), 2, 0);
+        Exception exception = assertThrows(InvalidMatchStateException.class,
+                                           () -> liveScoreboardApi.updateMatch(match.getId(), 0, 1));
+        assertNotNull(exception);
+    }
+
+    @Test
+    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws InvalidMatchStateException, StartNewMatchException {
+        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
+        Match updatedMatch = liveScoreboardApi.updateMatch(match.getId(), 1, 0);
+        assertEquals(1, updatedMatch.getHomeTeamScore());
+        assertEquals(0, updatedMatch.getAwayTeamScore());
+    }
+
+    @Test
     void givenOneMatch_whenGetScoreboard_thenSummaryOfOneMatch() throws StartNewMatchException, InvalidMatchStateException {
         Match match = liveScoreboardApi.startNewMatch("Mexico", "Canada");
-        match.update(1, 0);
-        match.update(1, 1);
-        match.update(2, 1);
-        match.update(3, 1);
+        liveScoreboardApi.updateMatch(match.getId(), 1, 0);
+        liveScoreboardApi.updateMatch(match.getId(), 1, 1);
+        liveScoreboardApi.updateMatch(match.getId(), 2, 1);
+        liveScoreboardApi.updateMatch(match.getId(), 3, 1);
 
         String expectedSummary = "1. Mexico 3 - Canada 1";
 
@@ -110,19 +152,19 @@ class LiveScoreboardApiImplTest {
     @Test
     void givenThreeMatches_whenGetScoreboard_thenCorrectSummary() throws StartNewMatchException, InvalidMatchStateException {
         Match match1 = liveScoreboardApi.startNewMatch("Mexico", "Canada");
-        match1.update(0, 5);
+        liveScoreboardApi.updateMatch(match1.getId(), 0, 5);
 
         Match match2 = liveScoreboardApi.startNewMatch("Spain", "Brazil");
-        match2.update(10, 2);
+        liveScoreboardApi.updateMatch(match2.getId(), 10, 2);
 
         Match match3 = liveScoreboardApi.startNewMatch("Germany", "France");
-        match3.update(2, 2);
+        liveScoreboardApi.updateMatch(match3.getId(), 2, 2);
 
         Match match4 = liveScoreboardApi.startNewMatch("Uruguay", "Italy");
-        match4.update(6, 6);
+        liveScoreboardApi.updateMatch(match4.getId(), 6, 6);
 
         Match match5 = liveScoreboardApi.startNewMatch("Argentina", "Australia");
-        match5.update(3, 1);
+        liveScoreboardApi.updateMatch(match5.getId(), 3, 1);
 
         String expectedSummary = """
                 1. Uruguay 6 - Italy 6

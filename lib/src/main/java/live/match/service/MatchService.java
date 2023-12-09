@@ -8,7 +8,7 @@ import live.match.repository.MatchRepository;
 public interface MatchService {
     Match start(String homeTeamName, String awayTeamName) throws StartNewMatchException;
 
-    void update(String id, int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException;
+    Match update(String id, int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException;
 
     void finish(String id) throws InvalidMatchStateException;
 

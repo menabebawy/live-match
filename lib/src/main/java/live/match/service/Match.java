@@ -62,14 +62,6 @@ public final class Match {
         this.finished = true;
     }
 
-    public void update(int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException {
-        if (homeTeamScore < 0 || awayTeamScore < 0) {
-            throw new InvalidMatchStateException("Score less than 0 is not allowed");
-        }
-        matchService.update(id, homeTeamScore, awayTeamScore);
-        setTeamsScores(homeTeamScore, awayTeamScore);
-    }
-
     public void finish() throws InvalidMatchStateException {
         matchService.finish(id);
     }
