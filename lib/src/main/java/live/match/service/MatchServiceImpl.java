@@ -13,7 +13,7 @@ class MatchServiceImpl implements MatchService {
 
     @Override
     public Match start(String homeTeamName, String awayTeamName) throws StartNewMatchException {
-        validateIfTeamsOccupied(homeTeamName, awayTeamName);
+        validateTeamsAvailability(homeTeamName, awayTeamName);
         Team homeTeam = new Team(homeTeamName.trim());
         Team awayTeam = new Team(awayTeamName.trim());
         Match match = new Match(UUID.randomUUID().toString(), System.nanoTime(), homeTeam, awayTeam);
@@ -21,7 +21,7 @@ class MatchServiceImpl implements MatchService {
         return match;
     }
 
-    private void validateIfTeamsOccupied(String homeTeamName, String awayTeamName) throws StartNewMatchException {
+    private void validateTeamsAvailability(String homeTeamName, String awayTeamName) throws StartNewMatchException {
         List<String> occupiedTeamsList = getOccupiedTeamsNames();
         if (occupiedTeamsList.contains(homeTeamName)) {
             throw new StartNewMatchException(homeTeamName + " is currently playing another match");
@@ -79,7 +79,7 @@ class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Scoreboard createSoretedScoreboard() {
+    public Scoreboard createSortedScoreboard() {
         List<Match> inProgressMatches = getInProgressMatches().stream()
                 .sorted(Comparator.comparing(Match::getScore).thenComparing(Match::getStartedAt).reversed())
                 .toList();
