@@ -2,10 +2,16 @@
 
 ![example event parameter](https://github.com/menabebawy/live-match/actions/workflows/ci-gradle.yml/badge.svg?event=push)
 
+Test coverage is 100% ✅
+
 ## Overview
 
 The following repo contains a new Live Football World Cup Scoreboard library that shows all the ongoing matches and
 their scores. It developed using **TDD**.
+
+## Test Coverage
+
+Run `gradle.build` then Navigate to `build > reports > tests` and open `index.html` using a web browser.
 
 ## Guidelines
 
