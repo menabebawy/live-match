@@ -12,7 +12,7 @@ their scores. It developed using **TDD**.
 To use the library all you need is just getting an instance of `LiveScoreboardApi`.
 
 ```java
-LiveScoreboardApi.createInstance();
+LiveScoreboardApi liveScoreboardApi = LiveScoreboardApi.createInstance();
 ```
 
 Then you can enjoy consuming the functionality.
@@ -38,7 +38,9 @@ the match could not be updated, for instance the match is already finished. At t
 exception telling the reason. Therefore, it should be surrounded using `try catch`.
 
 ```java
-createdMatch.update(int firstTeamScore, int secondTeamScore);
+Match createMatch = liveScoreboardApi.updateMatch(String id,
+int firstTeamScore,
+int secondTeamScore);
 ```
 
 ### Finish match
@@ -48,7 +50,7 @@ an exception when it could not finish it, for instance, you try to finish match 
 should be surrounded using `try catch`.
 
 ```java
-createdMatch.finish();
+Match createMatch = liveScoreboardApi.finshMatch(String id);
 ```
 
 ### Scoreboard screen
