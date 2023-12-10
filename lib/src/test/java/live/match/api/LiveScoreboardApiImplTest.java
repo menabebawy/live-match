@@ -74,8 +74,11 @@ class LiveScoreboardApiImplTest {
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"  ", "\t", "\n"})
-    void givenHomeTeamNameBlank_whenStartNewMatch_thenThrowStartNewMatchException(String blankTeamName) {
+    void givenTeamNameBlank_whenStartNewMatch_thenThrowStartNewMatchException(String blankTeamName) {
         assertThatThrownBy(() -> liveScoreboardApi.startNewMatch(blankTeamName, AWAY_TEAM_NAME))
+                .isInstanceOf(StartNewMatchException.class);
+
+        assertThatThrownBy(() -> liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, blankTeamName))
                 .isInstanceOf(StartNewMatchException.class);
     }
 
@@ -102,6 +105,21 @@ class LiveScoreboardApiImplTest {
     void givenTeamScoreLessThanZero_whenUpdateMatch_thenThrowInvalidMatchStateException() throws StartNewMatchException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         assertThatThrownBy(() -> liveScoreboardApi.updateMatch(match.getId(), 2, -1))
+                .isInstanceOf(InvalidMatchStateException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, -2, -5})
+    void givenInvalidScore_whenUpdateMatch_thenThrowsInvalidMatchStateException(int score) {
+        assertThatThrownBy(() -> liveScoreboardApi.updateMatch("id", score, score))
+                .isInstanceOf(InvalidMatchStateException.class);
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"  ", "\t", "\n"})
+    void givenInvalidMatchId_whenUpdateMatch_thenThrowInvalidMatchStateException(String id) {
+        assertThatThrownBy(() -> liveScoreboardApi.updateMatch(id, 1, 1))
                 .isInstanceOf(InvalidMatchStateException.class);
     }
 

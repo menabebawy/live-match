@@ -20,17 +20,22 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
     public Match updateMatch(String id,
                              int homeTeamScore,
                              int awayTeamScore) throws InvalidMatchStateException, MatchNotFoundException {
+        validateId(id);
         if (homeTeamScore < 0 || awayTeamScore < 0) {
             throw new InvalidMatchStateException("score less than zero is not allowed");
         }
         return matchService.update(id, homeTeamScore, awayTeamScore);
     }
 
-    @Override
-    public Match finishMatch(String id) throws InvalidMatchStateException, MatchNotFoundException {
+    private static void validateId(String id) throws InvalidMatchStateException {
         if (id == null || id.trim().isBlank()) {
             throw new InvalidMatchStateException("id should not be null or blank");
         }
+    }
+
+    @Override
+    public Match finishMatch(String id) throws InvalidMatchStateException, MatchNotFoundException {
+        validateId(id);
         return matchService.finish(id);
     }
 
