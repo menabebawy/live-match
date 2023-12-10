@@ -14,7 +14,7 @@ public interface MatchService {
 
     Match finish(String id) throws InvalidMatchStateException, MatchNotFoundException;
 
-    Scoreboard createSoretedScoreboard();
+    Scoreboard createSortedScoreboard();
 
     static MatchService createInstant() {
         return new MatchServiceImpl();

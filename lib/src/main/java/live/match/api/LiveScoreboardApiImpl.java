@@ -52,6 +52,6 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
 
     @Override
     public Scoreboard createScoreboard() {
-        return matchService.createSoretedScoreboard();
+        return matchService.createSortedScoreboard();
     }
 }
