@@ -42,7 +42,9 @@ class MatchServiceImpl implements MatchService {
             throw new InvalidMatchStateException("Update finished match is not allowed");
         }
 
-        validateUpdatedScores(match, homeTeamScore, awayTeamScore);
+        if (areScoresLessThanCurrent(homeTeamScore, awayTeamScore, match)) {
+            throw new InvalidMatchStateException("Value is less than current");
+        }
 
         match.setTeamsScores(homeTeamScore, awayTeamScore);
 
@@ -51,12 +53,8 @@ class MatchServiceImpl implements MatchService {
         return match;
     }
 
-    private static void validateUpdatedScores(Match match,
-                                              int homeTeamUpdatedScore,
-                                              int awayTeamUpdatedScore) throws InvalidMatchStateException {
-        if (match.getHomeTeamScore() > homeTeamUpdatedScore || match.getAwayTeamScore() > awayTeamUpdatedScore) {
-            throw new InvalidMatchStateException("Value is less than current");
-        }
+    private static boolean areScoresLessThanCurrent(int homeTeamScore, int awayTeamScore, Match match) {
+        return match.getHomeTeamScore() > homeTeamScore || match.getAwayTeamScore() > awayTeamScore;
     }
 
     @Override
