@@ -79,4 +79,3 @@ Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
 + Git
 
 **_Enjoy your time with the Live Football World Cup Score_**
-> > > > > > > a5ea1cd (update README.md to show how to use the api)
