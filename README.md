@@ -1,3 +1,3 @@
 # live-match
 
-![example event parameter](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?event=push)
+![example event parameter](https://github.com/menabebawy/live-match/actions/workflows/ci-gradle.yml/badge.svg?event=push)
