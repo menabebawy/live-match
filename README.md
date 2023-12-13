@@ -1,8 +1,7 @@
 # Live Football World Cup Score Board Java Library
 
 ![example event parameter](https://github.com/menabebawy/live-match/actions/workflows/ci-gradle.yml/badge.svg?event=push)
-
-Test coverage is 100% ✅
+[![Coverage](.github/badges/jacoco.svg)](https://github.com/menabebawy/live-match/actions/workflows/ci-gradle.yml)
 
 ## Overview
 
