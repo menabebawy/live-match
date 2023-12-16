@@ -43,11 +43,17 @@ jobs:
           generate-branches-badge: true
           jacoco-csv-file: lib/build/jacocoReport/test/jacocoTestReport.csv
 
-
       - name: Log coverage percentages to workflow output
         run: |
           echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
           echo "branches = ${{ steps.jacoco.outputs.branches }}"
+
+      - name: Fail PR if overall coverage is less than 80%
+        if: ${{ github.event_name == 'pull_request' && steps.jacoco.outputs.coverage < 0.8 }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setFailed('Overall coverage is less than 80%!')
 
       - name: Commit the badge (if it changed)
         run: |
