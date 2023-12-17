@@ -2,7 +2,7 @@ package live.match.api;
 
 import live.match.service.*;
 
-public class LiveScoreboardApiImpl implements LiveScoreboardApi {
+class LiveScoreboardApiImpl implements LiveScoreboardApi {
     private final MatchService matchService;
 
     LiveScoreboardApiImpl(MatchService matchService) {
