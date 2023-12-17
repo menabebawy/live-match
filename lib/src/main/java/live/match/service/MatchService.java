@@ -1,6 +1,5 @@
 package live.match.service;
 
-import live.match.api.InvalidMatchStateException;
 import live.match.api.MatchNotFoundException;
 import live.match.api.StartNewMatchException;
 
@@ -11,7 +10,7 @@ public interface MatchService {
 
     Match update(String id,
                  int homeTeamScore,
-                 int awayTeamScore) throws OperationNotSupportedException, InvalidMatchStateException, MatchNotFoundException;
+                 int awayTeamScore) throws OperationNotSupportedException, MatchNotFoundException;
 
     Match finish(String id) throws MatchNotFoundException, OperationNotSupportedException;
 

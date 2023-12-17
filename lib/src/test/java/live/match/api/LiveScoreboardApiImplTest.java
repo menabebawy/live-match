@@ -115,7 +115,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowOperationNotSupportedException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         liveScoreboardApi.updateMatch(match.getId(), 2, 0);
 
@@ -124,7 +124,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         Match updatedMatch = liveScoreboardApi.updateMatch(match.getId(), 1, 0);
         assertThat(updatedMatch.getHomeTeamScore()).isEqualTo(1);
@@ -177,7 +177,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenOneMatch_whenGetScoreboard_thenSummaryOfOneMatch() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException, OperationNotSupportedException {
+    void givenOneMatch_whenGetScoreboard_thenSummaryOfOneMatch() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = liveScoreboardApi.startNewMatch("Mexico", "Canada");
         liveScoreboardApi.updateMatch(match.getId(), 1, 0);
         liveScoreboardApi.updateMatch(match.getId(), 1, 1);
@@ -201,7 +201,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenThreeMatches_whenGetScoreboard_thenCorrectSummary() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException, OperationNotSupportedException {
+    void givenThreeMatches_whenGetScoreboard_thenCorrectSummary() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match1 = liveScoreboardApi.startNewMatch("Mexico", "Canada");
         liveScoreboardApi.updateMatch(match1.getId(), 0, 5);
 

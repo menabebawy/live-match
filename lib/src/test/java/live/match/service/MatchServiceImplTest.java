@@ -1,6 +1,5 @@
 package live.match.service;
 
-import live.match.api.InvalidMatchStateException;
 import live.match.api.MatchNotFoundException;
 import live.match.api.StartNewMatchException;
 import org.junit.jupiter.api.AfterEach;
@@ -56,7 +55,7 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowsOperationNotSupportedException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowsOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.update(match.getId(), 2, 0);
 
@@ -65,7 +64,7 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = getStartedMatchBetweenHomeAndAway();
         Match updatedMatch = matchService.update(match.getId(), 1, 0);
         assertThat(updatedMatch.getHomeTeamScore()).isEqualTo(1);

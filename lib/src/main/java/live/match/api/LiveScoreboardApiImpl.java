@@ -30,7 +30,7 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
     @Override
     public Match updateMatch(String id,
                              int homeTeamScore,
-                             int awayTeamScore) throws IllegalArgumentException, InvalidMatchStateException, MatchNotFoundException, OperationNotSupportedException {
+                             int awayTeamScore) throws IllegalArgumentException, MatchNotFoundException, OperationNotSupportedException {
         validateId(id);
         validateScore(homeTeamScore);
         validateScore(awayTeamScore);
