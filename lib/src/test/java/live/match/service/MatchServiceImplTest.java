@@ -40,7 +40,7 @@ class MatchServiceImplTest {
 
     // region update match
     @Test
-    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowsOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.finish(match.getId());
 
@@ -49,14 +49,14 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void givenNotStartedMatchYet_whenUpdateMatch_thenThrowMatchNotFoundException() {
+    void givenNotStartedMatchYet_whenUpdateMatch_thenThrowsMatchNotFoundException() {
         Match match = new Match("id", System.nanoTime(), new Team("Team1"), new Team("Team2"));
         assertThatThrownBy(() -> matchService.update(match.getId(), 1, 0))
                 .isInstanceOf(MatchNotFoundException.class);
     }
 
     @Test
-    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowsOperationNotSupportedException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.update(match.getId(), 2, 0);
 
@@ -76,7 +76,7 @@ class MatchServiceImplTest {
 
     // region finish match
     @Test
-    void givenFinishedMatchId_whenFinishMatch_thenInvalidMatchStateException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenFinishedMatchId_whenFinishMatch_thenThrowsOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.finish(match.getId());
 
@@ -85,7 +85,7 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void givenNotFoundMatchId_whenFinishMatch_thenMatchNotFoundException() {
+    void givenNotFoundMatchId_whenFinishMatch_thenThrowsMatchNotFoundException() {
         assertThatThrownBy(() -> matchService.finish("id"))
                 .isInstanceOf(MatchNotFoundException.class);
     }

@@ -64,7 +64,7 @@ class LiveScoreboardApiImplTest {
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"  ", "\t", "\n"})
-    void givenTeamNameBlank_whenStartNewMatch_thenThrowStartNewMatchException(String blankTeamName) {
+    void givenTeamNameBlank_whenStartNewMatch_thenThrowIllegalArgumentException(String blankTeamName) {
         assertThatThrownBy(() -> liveScoreboardApi.startNewMatch(blankTeamName, AWAY_TEAM_NAME))
                 .isInstanceOf(IllegalArgumentException.class);
 
@@ -77,7 +77,7 @@ class LiveScoreboardApiImplTest {
     // region update match
 
     @Test
-    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         liveScoreboardApi.finishMatch(match.getId());
 
@@ -92,7 +92,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenTeamScoreLessThanZero_whenUpdateMatch_thenThrowInvalidMatchStateException() throws StartNewMatchException {
+    void givenTeamScoreLessThanZero_whenUpdateMatch_thenThrowIllegalArgumentException() throws StartNewMatchException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         String id = match.getId();
         assertThatThrownBy(() -> liveScoreboardApi.updateMatch(id, 2, -1))
@@ -101,7 +101,7 @@ class LiveScoreboardApiImplTest {
 
     @ParameterizedTest
     @ValueSource(ints = {-1, -2, -5})
-    void givenInvalidScore_whenUpdateMatch_thenThrowsInvalidMatchStateException(int score) {
+    void givenInvalidScore_whenUpdateMatch_thenThrowsIllegalArgumentException(int score) {
         assertThatThrownBy(() -> liveScoreboardApi.updateMatch("id", score, score))
                 .isInstanceOf(IllegalArgumentException.class);
     }
@@ -109,13 +109,13 @@ class LiveScoreboardApiImplTest {
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"  ", "\t", "\n"})
-    void givenInvalidMatchId_whenUpdateMatch_thenThrowInvalidMatchStateException(String id) {
+    void givenInvalidMatchId_whenUpdateMatch_thenThrowIllegalArgumentException(String id) {
         assertThatThrownBy(() -> liveScoreboardApi.updateMatch(id, 1, 1))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowOperationNotSupportedException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         liveScoreboardApi.updateMatch(match.getId(), 2, 0);
 
@@ -136,7 +136,7 @@ class LiveScoreboardApiImplTest {
     // region finish match
 
     @Test
-    void givenFinishedMatchId_whenFinishMatch_thenThrowsInvalidMatchStateException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenFinishedMatchId_whenFinishMatch_thenThrowsOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         liveScoreboardApi.finishMatch(match.getId());
 
@@ -147,7 +147,7 @@ class LiveScoreboardApiImplTest {
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"  ", "\t", "\n"})
-    void givenInvalidMatchId_whenFinishMatch_thenThrowsInvalidMatchStateException(String id) {
+    void givenInvalidMatchId_whenFinishMatch_thenThrowsIllegalArgumentException(String id) {
         assertThatThrownBy(() -> liveScoreboardApi.finishMatch(id))
                 .isInstanceOf(IllegalArgumentException.class);
     }
