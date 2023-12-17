@@ -1,8 +1,5 @@
 package live.match.service;
 
-import live.match.api.InvalidMatchStateException;
-import live.match.api.MatchNotFoundException;
-import live.match.api.StartNewMatchException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

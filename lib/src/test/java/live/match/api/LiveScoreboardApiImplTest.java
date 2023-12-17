@@ -1,7 +1,6 @@
 package live.match.api;
 
-import live.match.service.Match;
-import live.match.service.Scoreboard;
+import live.match.service.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

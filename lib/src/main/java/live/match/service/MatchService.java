@@ -1,9 +1,5 @@
 package live.match.service;
 
-import live.match.api.InvalidMatchStateException;
-import live.match.api.MatchNotFoundException;
-import live.match.api.StartNewMatchException;
-
 public interface MatchService {
     Match start(String homeTeamName, String awayTeamName) throws StartNewMatchException;
 

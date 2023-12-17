@@ -1,4 +1,4 @@
-package live.match.api;
+package live.match.service;
 
 public class InvalidMatchStateException extends Exception {
     public InvalidMatchStateException(String message) {
