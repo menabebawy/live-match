@@ -1,12 +1,11 @@
 package live.match.service;
 
+import live.match.api.InvalidMatchStateException;
 import live.match.api.MatchNotFoundException;
 import live.match.api.StartNewMatchException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.naming.OperationNotSupportedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -39,12 +38,12 @@ class MatchServiceImplTest {
 
     // region update match
     @Test
-    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowsOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException {
+    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowsInvalidMatchStateException() throws StartNewMatchException, MatchNotFoundException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.finish(match.getId());
 
         assertThatThrownBy(() -> matchService.update(match.getId(), 2, 0))
-                .isInstanceOf(OperationNotSupportedException.class);
+                .isInstanceOf(InvalidMatchStateException.class);
     }
 
     @Test
@@ -55,16 +54,16 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowsOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowsInvalidMatchStateException() throws StartNewMatchException, MatchNotFoundException, InvalidMatchStateException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.update(match.getId(), 2, 0);
 
         assertThatThrownBy(() -> matchService.update(match.getId(), 0, 1))
-                .isInstanceOf(OperationNotSupportedException.class);
+                .isInstanceOf(InvalidMatchStateException.class);
     }
 
     @Test
-    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws StartNewMatchException, MatchNotFoundException, InvalidMatchStateException {
         Match match = getStartedMatchBetweenHomeAndAway();
         Match updatedMatch = matchService.update(match.getId(), 1, 0);
         assertThat(updatedMatch.getHomeTeamScore()).isEqualTo(1);

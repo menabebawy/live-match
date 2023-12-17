@@ -4,8 +4,6 @@ import live.match.service.Match;
 import live.match.service.MatchService;
 import live.match.service.Scoreboard;
 
-import javax.naming.OperationNotSupportedException;
-
 public class LiveScoreboardApiImpl implements LiveScoreboardApi {
     private final MatchService matchService;
 
@@ -30,7 +28,7 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
     @Override
     public Match updateMatch(String id,
                              int homeTeamScore,
-                             int awayTeamScore) throws IllegalArgumentException, MatchNotFoundException, OperationNotSupportedException {
+                             int awayTeamScore) throws IllegalArgumentException, MatchNotFoundException, InvalidMatchStateException {
         validateId(id);
         validateScore(homeTeamScore);
         validateScore(awayTeamScore);
