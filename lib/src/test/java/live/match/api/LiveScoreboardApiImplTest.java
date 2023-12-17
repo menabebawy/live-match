@@ -82,7 +82,7 @@ class LiveScoreboardApiImplTest {
         liveScoreboardApi.finishMatch(match.getId());
 
         assertThatThrownBy(() -> liveScoreboardApi.updateMatch(match.getId(), 0, 1))
-                .isInstanceOf(InvalidMatchStateException.class);
+                .isInstanceOf(OperationNotSupportedException.class);
     }
 
     @Test
@@ -115,16 +115,16 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
+    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         liveScoreboardApi.updateMatch(match.getId(), 2, 0);
 
         assertThatThrownBy(() -> liveScoreboardApi.updateMatch(match.getId(), 0, 1))
-                .isInstanceOf(InvalidMatchStateException.class);
+                .isInstanceOf(OperationNotSupportedException.class);
     }
 
     @Test
-    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
+    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         Match updatedMatch = liveScoreboardApi.updateMatch(match.getId(), 1, 0);
         assertThat(updatedMatch.getHomeTeamScore()).isEqualTo(1);
@@ -177,7 +177,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenOneMatch_whenGetScoreboard_thenSummaryOfOneMatch() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
+    void givenOneMatch_whenGetScoreboard_thenSummaryOfOneMatch() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException, OperationNotSupportedException {
         Match match = liveScoreboardApi.startNewMatch("Mexico", "Canada");
         liveScoreboardApi.updateMatch(match.getId(), 1, 0);
         liveScoreboardApi.updateMatch(match.getId(), 1, 1);
@@ -201,7 +201,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenThreeMatches_whenGetScoreboard_thenCorrectSummary() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
+    void givenThreeMatches_whenGetScoreboard_thenCorrectSummary() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException, OperationNotSupportedException {
         Match match1 = liveScoreboardApi.startNewMatch("Mexico", "Canada");
         liveScoreboardApi.updateMatch(match1.getId(), 0, 5);
 

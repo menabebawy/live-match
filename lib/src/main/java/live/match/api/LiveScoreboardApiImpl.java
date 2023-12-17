@@ -30,9 +30,10 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
     @Override
     public Match updateMatch(String id,
                              int homeTeamScore,
-                             int awayTeamScore) throws IllegalArgumentException, InvalidMatchStateException, MatchNotFoundException {
+                             int awayTeamScore) throws IllegalArgumentException, InvalidMatchStateException, MatchNotFoundException, OperationNotSupportedException {
         validateId(id);
-        validateScores(homeTeamScore, awayTeamScore);
+        validateScore(homeTeamScore);
+        validateScore(awayTeamScore);
         return matchService.update(id, homeTeamScore, awayTeamScore);
     }
 
@@ -42,8 +43,8 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
         }
     }
 
-    private static void validateScores(int homeTeamScore, int awayTeamScore) throws IllegalArgumentException {
-        if (homeTeamScore < 0 || awayTeamScore < 0) {
+    private static void validateScore(int score) throws IllegalArgumentException {
+        if (score < 0) {
             throw new IllegalArgumentException("score less than zero is not allowed");
         }
     }

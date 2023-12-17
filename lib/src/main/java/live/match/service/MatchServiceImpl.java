@@ -1,6 +1,5 @@
 package live.match.service;
 
-import live.match.api.InvalidMatchStateException;
 import live.match.api.MatchNotFoundException;
 import live.match.api.StartNewMatchException;
 
@@ -35,15 +34,15 @@ class MatchServiceImpl implements MatchService {
     @Override
     public Match update(String id,
                         int homeTeamScore,
-                        int awayTeamScore) throws InvalidMatchStateException, MatchNotFoundException {
+                        int awayTeamScore) throws OperationNotSupportedException, MatchNotFoundException {
         Match match = getMatchByIdOrThrowException(id);
 
         if (match.isFinished()) {
-            throw new InvalidMatchStateException("Update finished match is not allowed");
+            throw new OperationNotSupportedException("Update finished match is not allowed");
         }
 
         if (areScoresLessThanCurrent(homeTeamScore, awayTeamScore, match)) {
-            throw new InvalidMatchStateException("Value is less than current");
+            throw new OperationNotSupportedException("Value is less than current");
         }
 
         match.setTeamsScores(homeTeamScore, awayTeamScore);

@@ -45,7 +45,7 @@ class MatchServiceImplTest {
         matchService.finish(match.getId());
 
         assertThatThrownBy(() -> matchService.update(match.getId(), 2, 0))
-                .isInstanceOf(InvalidMatchStateException.class);
+                .isInstanceOf(OperationNotSupportedException.class);
     }
 
     @Test
@@ -56,25 +56,16 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void givenTeamScoreLessThanZero_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
-        Match match = getStartedMatchBetweenHomeAndAway();
-        matchService.update(match.getId(), 2, 0);
-
-        assertThatThrownBy(() -> matchService.update(match.getId(), 2, -1))
-                .isInstanceOf(InvalidMatchStateException.class);
-    }
-
-    @Test
-    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
+    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.update(match.getId(), 2, 0);
 
         assertThatThrownBy(() -> matchService.update(match.getId(), 0, 1))
-                .isInstanceOf(InvalidMatchStateException.class);
+                .isInstanceOf(OperationNotSupportedException.class);
     }
 
     @Test
-    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
+    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = getStartedMatchBetweenHomeAndAway();
         Match updatedMatch = matchService.update(match.getId(), 1, 0);
         assertThat(updatedMatch.getHomeTeamScore()).isEqualTo(1);

@@ -12,7 +12,7 @@ public interface LiveScoreboardApi {
 
     Match updateMatch(String id,
                       int homeTeamScore,
-                      int awayTeamScore) throws IllegalArgumentException, InvalidMatchStateException, MatchNotFoundException;
+                      int awayTeamScore) throws IllegalArgumentException, InvalidMatchStateException, MatchNotFoundException, OperationNotSupportedException;
 
     Match finishMatch(String id) throws OperationNotSupportedException, IllegalArgumentException, MatchNotFoundException;
 

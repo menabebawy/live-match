@@ -11,7 +11,7 @@ public interface MatchService {
 
     Match update(String id,
                  int homeTeamScore,
-                 int awayTeamScore) throws InvalidMatchStateException, MatchNotFoundException;
+                 int awayTeamScore) throws OperationNotSupportedException, InvalidMatchStateException, MatchNotFoundException;
 
     Match finish(String id) throws MatchNotFoundException, OperationNotSupportedException;
 
