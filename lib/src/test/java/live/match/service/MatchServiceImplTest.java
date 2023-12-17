@@ -39,7 +39,7 @@ class MatchServiceImplTest {
 
     // region update match
     @Test
-    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowsOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowsOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.finish(match.getId());
 
@@ -75,12 +75,11 @@ class MatchServiceImplTest {
 
     // region finish match
     @Test
-    void givenFinishedMatchId_whenFinishMatch_thenThrowsOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenFinishedMatchId_whenFinishMatch_thenNothing() throws StartNewMatchException, MatchNotFoundException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.finish(match.getId());
-
-        assertThatThrownBy(() -> matchService.finish(match.getId()))
-                .isInstanceOf(OperationNotSupportedException.class);
+        Match finishedMatch = matchService.finish(match.getId());
+        assertThat(finishedMatch.isFinished()).isTrue();
     }
 
     @Test
@@ -90,7 +89,7 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void givenInProgressMatchId_whenFinishMatch_thenMatchFinisher() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenInProgressMatchId_whenFinishMatch_thenMatchFinisher() throws StartNewMatchException, MatchNotFoundException {
         Match match = getStartedMatchBetweenHomeAndAway();
         Match finishedMatch = matchService.finish(match.getId());
         assertThat(finishedMatch.isFinished()).isTrue();

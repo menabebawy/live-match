@@ -14,7 +14,7 @@ public interface LiveScoreboardApi {
                       int homeTeamScore,
                       int awayTeamScore) throws IllegalArgumentException, MatchNotFoundException, OperationNotSupportedException;
 
-    Match finishMatch(String id) throws OperationNotSupportedException, IllegalArgumentException, MatchNotFoundException;
+    Match finishMatch(String id) throws IllegalArgumentException, MatchNotFoundException;
 
     Scoreboard createScoreboard();
 

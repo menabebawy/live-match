@@ -50,7 +50,7 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
     }
 
     @Override
-    public Match finishMatch(String id) throws OperationNotSupportedException, IllegalArgumentException, MatchNotFoundException {
+    public Match finishMatch(String id) throws IllegalArgumentException, MatchNotFoundException {
         validateId(id);
         return matchService.finish(id);
     }

@@ -77,7 +77,7 @@ class LiveScoreboardApiImplTest {
     // region update match
 
     @Test
-    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         liveScoreboardApi.finishMatch(match.getId());
 
@@ -136,12 +136,11 @@ class LiveScoreboardApiImplTest {
     // region finish match
 
     @Test
-    void givenFinishedMatchId_whenFinishMatch_thenThrowsOperationNotSupportedException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenFinishedMatchId_whenFinishMatch_thenNothing() throws StartNewMatchException, MatchNotFoundException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         liveScoreboardApi.finishMatch(match.getId());
-
-        assertThatThrownBy(() -> liveScoreboardApi.finishMatch(match.getId()))
-                .isInstanceOf(OperationNotSupportedException.class);
+        Match finishedMatch = liveScoreboardApi.finishMatch(match.getId());
+        assertThat(finishedMatch.isFinished()).isTrue();
     }
 
     @ParameterizedTest
@@ -159,7 +158,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenInProgressMatchId_whenFinishMatch_thenFinishMatch() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenInProgressMatchId_whenFinishMatch_thenFinishMatch() throws StartNewMatchException, MatchNotFoundException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         Match finishedMatch = liveScoreboardApi.finishMatch(match.getId());
         assertThat(finishedMatch.isFinished()).isTrue();
@@ -192,7 +191,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenOneFinishedMatch_whenGetScoreboard_thenEmptySummary() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
+    void givenOneFinishedMatch_whenGetScoreboard_thenEmptySummary() throws StartNewMatchException, MatchNotFoundException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         liveScoreboardApi.finishMatch(match.getId());
         Scoreboard scoreboard = liveScoreboardApi.createScoreboard();

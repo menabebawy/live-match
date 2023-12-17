@@ -57,11 +57,11 @@ class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Match finish(String id) throws MatchNotFoundException, OperationNotSupportedException {
+    public Match finish(String id) throws MatchNotFoundException {
         Match match = getMatchByIdOrThrowException(id);
 
         if (match.isFinished()) {
-            throw new OperationNotSupportedException("Match id: " + id + " is already finished");
+            return match;
         }
 
         match.setFinished();
