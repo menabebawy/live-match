@@ -16,7 +16,7 @@ public interface MatchService {
 
     Scoreboard createSortedScoreboard();
 
-    static MatchService createInstant() {
+    static MatchService createInstance() {
         return new MatchServiceImpl();
     }
 }

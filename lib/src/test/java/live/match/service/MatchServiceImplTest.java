@@ -15,7 +15,7 @@ class MatchServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        matchService = MatchService.createInstant();
+        matchService = MatchService.createInstance();
     }
 
     @AfterEach

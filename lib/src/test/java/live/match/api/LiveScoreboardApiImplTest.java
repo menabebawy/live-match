@@ -19,7 +19,7 @@ class LiveScoreboardApiImplTest {
 
     @BeforeEach
     void setUp() {
-        liveScoreboardApi = LiveScoreboardApi.createInstant();
+        liveScoreboardApi = LiveScoreboardApi.createInstance();
     }
 
     @AfterEach

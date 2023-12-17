@@ -14,7 +14,7 @@ public interface LiveScoreboardApi {
 
     Scoreboard createScoreboard();
 
-    static LiveScoreboardApi createInstant() {
-        return new LiveScoreboardApiImpl(MatchService.createInstant());
+    static LiveScoreboardApi createInstance() {
+        return new LiveScoreboardApiImpl(MatchService.createInstance());
     }
 }
