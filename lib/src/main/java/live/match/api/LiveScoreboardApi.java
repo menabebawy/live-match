@@ -7,13 +7,14 @@ import live.match.service.Scoreboard;
 import javax.naming.OperationNotSupportedException;
 
 public interface LiveScoreboardApi {
-    Match startNewMatch(String homeTeamName, String awayTeamName) throws StartNewMatchException;
+    Match startNewMatch(String homeTeamName,
+                        String awayTeamName) throws IllegalArgumentException, StartNewMatchException;
 
     Match updateMatch(String id,
                       int homeTeamScore,
-                      int awayTeamScore) throws InvalidMatchStateException, MatchNotFoundException;
+                      int awayTeamScore) throws IllegalArgumentException, InvalidMatchStateException, MatchNotFoundException;
 
-    Match finishMatch(String id) throws OperationNotSupportedException, InvalidMatchStateException, MatchNotFoundException;
+    Match finishMatch(String id) throws OperationNotSupportedException, IllegalArgumentException, MatchNotFoundException;
 
     Scoreboard createScoreboard();
 

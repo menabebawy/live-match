@@ -14,41 +14,42 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
     }
 
     @Override
-    public Match startNewMatch(String homeTeamName, String awayTeamName) throws StartNewMatchException {
+    public Match startNewMatch(String homeTeamName,
+                               String awayTeamName) throws IllegalArgumentException, StartNewMatchException {
         validateTeamName(homeTeamName);
         validateTeamName(awayTeamName);
         return matchService.start(homeTeamName, awayTeamName);
     }
 
-    private static void validateTeamName(String name) throws StartNewMatchException {
+    private static void validateTeamName(String name) throws IllegalArgumentException {
         if (name == null || name.trim().isBlank()) {
-            throw new StartNewMatchException("Team name should not be null or empty");
+            throw new IllegalArgumentException("Team name should not be null or empty");
         }
     }
 
     @Override
     public Match updateMatch(String id,
                              int homeTeamScore,
-                             int awayTeamScore) throws InvalidMatchStateException, MatchNotFoundException {
+                             int awayTeamScore) throws IllegalArgumentException, InvalidMatchStateException, MatchNotFoundException {
         validateId(id);
         validateScores(homeTeamScore, awayTeamScore);
         return matchService.update(id, homeTeamScore, awayTeamScore);
     }
 
-    private static void validateId(String id) throws InvalidMatchStateException {
+    private static void validateId(String id) throws IllegalArgumentException {
         if (id == null || id.trim().isBlank()) {
-            throw new InvalidMatchStateException("id should not be null or blank");
+            throw new IllegalArgumentException("id should not be null or blank");
         }
     }
 
-    private static void validateScores(int homeTeamScore, int awayTeamScore) throws InvalidMatchStateException {
+    private static void validateScores(int homeTeamScore, int awayTeamScore) throws IllegalArgumentException {
         if (homeTeamScore < 0 || awayTeamScore < 0) {
-            throw new InvalidMatchStateException("score less than zero is not allowed");
+            throw new IllegalArgumentException("score less than zero is not allowed");
         }
     }
 
     @Override
-    public Match finishMatch(String id) throws OperationNotSupportedException, InvalidMatchStateException, MatchNotFoundException {
+    public Match finishMatch(String id) throws OperationNotSupportedException, IllegalArgumentException, MatchNotFoundException {
         validateId(id);
         return matchService.finish(id);
     }
