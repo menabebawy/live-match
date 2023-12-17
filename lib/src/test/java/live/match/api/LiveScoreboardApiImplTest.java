@@ -9,6 +9,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import javax.naming.OperationNotSupportedException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -88,7 +90,7 @@ class LiveScoreboardApiImplTest {
     // region update match
 
     @Test
-    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
+    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         liveScoreboardApi.finishMatch(match.getId());
 
@@ -146,9 +148,12 @@ class LiveScoreboardApiImplTest {
     // region finish match
 
     @Test
-    void givenAlreadyFinishedMatchId_whenFinishMatch_thenThrowsInvalidMatchStateException() {
-        assertThatThrownBy(() -> liveScoreboardApi.finishMatch("id"))
-                .isInstanceOf(MatchNotFoundException.class);
+    void givenFinishedMatchId_whenFinishMatch_thenThrowsInvalidMatchStateException() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException, OperationNotSupportedException {
+        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
+        liveScoreboardApi.finishMatch(match.getId());
+
+        assertThatThrownBy(() -> liveScoreboardApi.finishMatch(match.getId()))
+                .isInstanceOf(OperationNotSupportedException.class);
     }
 
     @ParameterizedTest
@@ -160,16 +165,13 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenNotFoundMatchId_whenFinishMatch_thenThrowsMatchNotFoundException() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
-        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
-        liveScoreboardApi.finishMatch(match.getId());
-
-        assertThatThrownBy(() -> liveScoreboardApi.finishMatch(match.getId()))
-                .isInstanceOf(InvalidMatchStateException.class);
+    void givenNotFoundMatchId_whenFinishMatch_thenThrowsMatchNotFoundException() {
+        assertThatThrownBy(() -> liveScoreboardApi.finishMatch("id"))
+                .isInstanceOf(MatchNotFoundException.class);
     }
 
     @Test
-    void givenInProgressMatchId_whenFinishMatch_thenFinishMatch() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
+    void givenInProgressMatchId_whenFinishMatch_thenFinishMatch() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException, OperationNotSupportedException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         Match finishedMatch = liveScoreboardApi.finishMatch(match.getId());
         assertThat(finishedMatch.isFinished()).isTrue();
@@ -202,7 +204,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenOneFinishedMatch_whenGetScoreboard_thenEmptySummary() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
+    void givenOneFinishedMatch_whenGetScoreboard_thenEmptySummary() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         liveScoreboardApi.finishMatch(match.getId());
         Scoreboard scoreboard = liveScoreboardApi.createScoreboard();

@@ -4,6 +4,8 @@ import live.match.api.InvalidMatchStateException;
 import live.match.api.MatchNotFoundException;
 import live.match.api.StartNewMatchException;
 
+import javax.naming.OperationNotSupportedException;
+
 public interface MatchService {
     Match start(String homeTeamName, String awayTeamName) throws StartNewMatchException;
 
@@ -11,7 +13,7 @@ public interface MatchService {
                  int homeTeamScore,
                  int awayTeamScore) throws InvalidMatchStateException, MatchNotFoundException;
 
-    Match finish(String id) throws InvalidMatchStateException, MatchNotFoundException;
+    Match finish(String id) throws MatchNotFoundException, OperationNotSupportedException;
 
     Scoreboard createSortedScoreboard();
 

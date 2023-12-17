@@ -4,6 +4,8 @@ import live.match.service.Match;
 import live.match.service.MatchService;
 import live.match.service.Scoreboard;
 
+import javax.naming.OperationNotSupportedException;
+
 public class LiveScoreboardApiImpl implements LiveScoreboardApi {
     private final MatchService matchService;
 
@@ -46,7 +48,7 @@ public class LiveScoreboardApiImpl implements LiveScoreboardApi {
     }
 
     @Override
-    public Match finishMatch(String id) throws InvalidMatchStateException, MatchNotFoundException {
+    public Match finishMatch(String id) throws OperationNotSupportedException, InvalidMatchStateException, MatchNotFoundException {
         validateId(id);
         return matchService.finish(id);
     }

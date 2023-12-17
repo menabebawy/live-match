@@ -7,6 +7,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.naming.OperationNotSupportedException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -38,7 +40,7 @@ class MatchServiceImplTest {
 
     // region update match
     @Test
-    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws InvalidMatchStateException, StartNewMatchException, MatchNotFoundException {
+    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowInvalidMatchStateException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.finish(match.getId());
 
@@ -83,12 +85,12 @@ class MatchServiceImplTest {
 
     // region finish match
     @Test
-    void givenFinishedMatchId_whenFinishMatch_thenInvalidMatchStateException() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
+    void givenFinishedMatchId_whenFinishMatch_thenInvalidMatchStateException() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = getStartedMatchBetweenHomeAndAway();
         matchService.finish(match.getId());
 
         assertThatThrownBy(() -> matchService.finish(match.getId()))
-                .isInstanceOf(InvalidMatchStateException.class);
+                .isInstanceOf(OperationNotSupportedException.class);
     }
 
     @Test
@@ -98,7 +100,7 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void givenInProgressMatchId_whenFinishMatch_thenMatchFinisher() throws StartNewMatchException, InvalidMatchStateException, MatchNotFoundException {
+    void givenInProgressMatchId_whenFinishMatch_thenMatchFinisher() throws StartNewMatchException, MatchNotFoundException, OperationNotSupportedException {
         Match match = getStartedMatchBetweenHomeAndAway();
         Match finishedMatch = matchService.finish(match.getId());
         assertThat(finishedMatch.isFinished()).isTrue();

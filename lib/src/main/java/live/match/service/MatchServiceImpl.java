@@ -4,6 +4,7 @@ import live.match.api.InvalidMatchStateException;
 import live.match.api.MatchNotFoundException;
 import live.match.api.StartNewMatchException;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -57,11 +58,11 @@ class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Match finish(String id) throws InvalidMatchStateException, MatchNotFoundException {
+    public Match finish(String id) throws MatchNotFoundException, OperationNotSupportedException {
         Match match = getMatchByIdOrThrowException(id);
 
         if (match.isFinished()) {
-            throw new InvalidMatchStateException("Match id: " + id + " is already finished");
+            throw new OperationNotSupportedException("Match id: " + id + " is already finished");
         }
 
         match.setFinished();
