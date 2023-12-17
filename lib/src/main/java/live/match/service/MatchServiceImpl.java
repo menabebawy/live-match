@@ -2,7 +2,6 @@ package live.match.service;
 
 import live.match.api.InvalidMatchStateException;
 import live.match.api.MatchNotFoundException;
-import live.match.api.Scoreboard;
 import live.match.api.StartNewMatchException;
 
 import java.util.*;

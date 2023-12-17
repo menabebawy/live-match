@@ -2,6 +2,7 @@ package live.match.api;
 
 import live.match.service.Match;
 import live.match.service.MatchService;
+import live.match.service.Scoreboard;
 
 public interface LiveScoreboardApi {
     Match startNewMatch(String homeTeamName, String awayTeamName) throws StartNewMatchException;

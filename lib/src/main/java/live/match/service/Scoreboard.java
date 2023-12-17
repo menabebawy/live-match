@@ -1,6 +1,4 @@
-package live.match.api;
-
-import live.match.service.Match;
+package live.match.service;
 
 import java.util.List;
 
