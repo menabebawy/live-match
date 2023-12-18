@@ -2,12 +2,12 @@ package live.match.service;
 
 import java.util.List;
 
-public record Scoreboard(List<Match> mathList) {
+public record Scoreboard(List<Match> matchList) {
     public String getSummary() {
         int index = 0;
         StringBuilder summeryBuilder = new StringBuilder();
         boolean newLine = false;
-        for (Match match : mathList) {
+        for (Match match : matchList) {
             if (newLine) {
                 summeryBuilder.append(System.lineSeparator());
             }

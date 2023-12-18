@@ -178,7 +178,7 @@ class LiveScoreboardApiImplTest {
     @Test
     void givenNonMathsStarted_whenGetScoreboard_thenEmptySummary() {
         Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
-        assertThat(scoreboard.mathList()).isEmpty();
+        assertThat(scoreboard.matchList()).isEmpty();
         assertThat(scoreboard.getSummary()).isEmpty();
     }
 
@@ -202,7 +202,7 @@ class LiveScoreboardApiImplTest {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         liveScoreboardApi.finishMatch(match.getId());
         Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
-        assertThat(scoreboard.mathList()).isEmpty();
+        assertThat(scoreboard.matchList()).isEmpty();
         assertThat(scoreboard.getSummary()).isEmpty();
     }
 
