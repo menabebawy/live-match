@@ -128,9 +128,12 @@ class LiveScoreboardApiImplTest {
     @Test
     void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowsInvalidMatchStateException() throws StartNewMatchException, MatchNotFoundException, InvalidMatchStateException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
-        liveScoreboardApi.updateMatch(match.getId(), 2, 0);
+        liveScoreboardApi.updateMatch(match.getId(), 2, 1);
 
         assertThatThrownBy(() -> liveScoreboardApi.updateMatch(match.getId(), 0, 1))
+                .isInstanceOf(InvalidMatchStateException.class);
+
+        assertThatThrownBy(() -> liveScoreboardApi.updateMatch(match.getId(), 1, 1))
                 .isInstanceOf(InvalidMatchStateException.class);
     }
 
