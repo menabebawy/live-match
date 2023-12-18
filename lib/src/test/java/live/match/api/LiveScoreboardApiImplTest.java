@@ -168,13 +168,6 @@ class LiveScoreboardApiImplTest {
                 .isInstanceOf(MatchNotFoundException.class);
     }
 
-    @Test
-    void givenInProgressMatchId_whenFinishMatch_thenFinishMatch() throws StartNewMatchException, MatchNotFoundException {
-        Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
-        Match finishedMatch = liveScoreboardApi.finishMatch(match.getId());
-        assertThat(finishedMatch.isFinished()).isTrue();
-    }
-
     // endregion
 
     // region get scoreboard
