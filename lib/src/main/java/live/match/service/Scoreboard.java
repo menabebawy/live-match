@@ -12,11 +12,15 @@ public record Scoreboard(List<Match> matchList) {
                 summeryBuilder.append(System.lineSeparator());
             }
             newLine = true;
-            summeryBuilder.append(++index).append(". ")
-                    .append(match.getHomeTeam().name()).append(" ").append(match.getHomeTeamScore())
-                    .append(" - ")
-                    .append(match.getAwayTeam().name()).append(" ").append(match.getAwayTeamScore());
+            summeryBuilder.append(generateSummeryRow(++index, match));
         }
         return summeryBuilder.toString();
+    }
+
+    private static String generateSummeryRow(int index, Match match) {
+        return index + ". " +
+                match.getHomeTeam().name() + " " + match.getHomeTeamScore() +
+                " - " +
+                match.getAwayTeam().name() + " " + match.getAwayTeamScore();
     }
 }
