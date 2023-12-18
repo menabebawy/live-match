@@ -1,6 +1,10 @@
 package live.match.api;
 
-import live.match.service.*;
+import live.match.service.InvalidMatchStateException;
+import live.match.service.Match;
+import live.match.service.MatchNotFoundException;
+import live.match.service.Scoreboard;
+import live.match.service.StartNewMatchException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

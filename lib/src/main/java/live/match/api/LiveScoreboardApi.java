@@ -1,6 +1,11 @@
 package live.match.api;
 
-import live.match.service.*;
+import live.match.service.InvalidMatchStateException;
+import live.match.service.Match;
+import live.match.service.MatchNotFoundException;
+import live.match.service.MatchService;
+import live.match.service.Scoreboard;
+import live.match.service.StartNewMatchException;
 
 public interface LiveScoreboardApi {
 
@@ -58,7 +63,7 @@ public interface LiveScoreboardApi {
      * @throws MatchNotFoundException if id is not found in DB
      */
     Match finishMatch(String id) throws IllegalArgumentException, MatchNotFoundException;
-    
+
     /**
      * Return {@code Scoreboard} in which all in progress matches there.
      *
