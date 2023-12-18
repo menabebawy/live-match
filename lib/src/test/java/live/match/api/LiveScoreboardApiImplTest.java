@@ -29,11 +29,25 @@ class LiveScoreboardApiImplTest {
 
     // region start new match
     @Test
-    void givenNoNullTeams_whenStartNewMatch_thenMatchStartedInProgressAndScoreZero() throws StartNewMatchException {
+    void givenValidTeamsNames_whenStartNewMatch_thenMatchStartedInProgressAndScoreZero() throws StartNewMatchException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         assertThat(match).isNotNull();
         assertThat(match.getScore()).isZero();
         assertThat(match.isFinished()).isFalse();
+    }
+
+    @Test
+    void givenJustFreeTeams_whenStartNewMatch_thenMatchStarted() throws StartNewMatchException, MatchNotFoundException {
+        Match firstMatch = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
+        liveScoreboardApi.finishMatch(firstMatch.getId());
+
+        Match secondMatch = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, "Paris");
+        assertThat(secondMatch.isFinished()).isFalse();
+        assertThat(secondMatch.getScore()).isZero();
+
+        Match thirdMatch = liveScoreboardApi.startNewMatch("Vienna", AWAY_TEAM_NAME);
+        assertThat(thirdMatch.isFinished()).isFalse();
+        assertThat(thirdMatch.getScore()).isZero();
     }
 
     @Test
@@ -46,7 +60,7 @@ class LiveScoreboardApiImplTest {
     void givenOccupiedHomeTeam_whenStartNewMatch_thenThrowStartNewMatchException() throws StartNewMatchException {
         liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, SNOW_TEAM_NAME);
 
-        assertThatThrownBy(() -> liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME))
+        assertThatThrownBy(() -> liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, "Paris"))
                 .isInstanceOf(StartNewMatchException.class);
     }
 
@@ -54,7 +68,7 @@ class LiveScoreboardApiImplTest {
     void givenOccupiedAwayTeam_whenStartNewMatch_thenThrowStartNewMatchException() throws StartNewMatchException {
         liveScoreboardApi.startNewMatch(SNOW_TEAM_NAME, AWAY_TEAM_NAME);
 
-        assertThatThrownBy(() -> liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME))
+        assertThatThrownBy(() -> liveScoreboardApi.startNewMatch("Paris", AWAY_TEAM_NAME))
                 .isInstanceOf(StartNewMatchException.class);
     }
 
