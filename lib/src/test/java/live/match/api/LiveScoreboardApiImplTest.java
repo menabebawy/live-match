@@ -200,10 +200,16 @@ class LiveScoreboardApiImplTest {
     @Test
     void givenOneFinishedMatch_whenGetScoreboard_thenEmptySummary() throws StartNewMatchException, MatchNotFoundException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
+
+        Scoreboard oneMatchScoreboard = liveScoreboardApi.createScoreboard();
+        assertThat(oneMatchScoreboard.matchList()).hasSize(1);
+        assertThat(oneMatchScoreboard.getSummary()).contains(HOME_TEAM_NAME);
+
         liveScoreboardApi.finishMatch(match.getId());
-        Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
-        assertThat(scoreboard.matchList()).isEmpty();
-        assertThat(scoreboard.getSummary()).isEmpty();
+
+        Scoreboard mostUpdatedScoreboard = liveScoreboardApi.createScoreboard();
+        assertThat(mostUpdatedScoreboard.matchList()).isEmpty();
+        assertThat(mostUpdatedScoreboard.getSummary()).isEmpty();
     }
 
     @Test
