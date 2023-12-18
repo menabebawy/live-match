@@ -33,7 +33,7 @@ If the match could not be start for any reason, a thrown exception `StartNewMatc
 Therefore, it should be surrounded using `try catch`.
 
 ```java
-Match createMatch = liveScoreboardApi.startNewMatch(String firstTeamName, String secondTeamName);
+Match match = liveScoreboardApi.startNewMatch(String firstTeamName, String secondTeamName);
 ```
 
 ### Update match
@@ -43,9 +43,8 @@ the match could not be updated, for instance the match is already finished. At t
 exception telling the reason. Therefore, it should be surrounded using `try catch`.
 
 ```java
-Match createMatch = liveScoreboardApi.updateMatch(String id,
-int firstTeamScore,
-int secondTeamScore);
+Match match = liveScoreboardApi.updateMatch(String id,
+int firstTeamScore, int secondTeamScore);
 ```
 
 ### Finish match
@@ -55,7 +54,7 @@ an exception when it could not finish it, for instance, you try to finish match 
 should be surrounded using `try catch`.
 
 ```java
-Match createMatch = liveScoreboardApi.finshMatch(String id);
+Match match = liveScoreboardApi.finshMatch(String id);
 ```
 
 ### Scoreboard screen
