@@ -177,8 +177,8 @@ class LiveScoreboardApiImplTest {
 
     @Test
     void givenNonMathsStarted_whenGetScoreboard_thenEmptySummary() {
-        Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
-        assertThat(scoreboard.matchList()).isEmpty();
+        Scoreboard scoreboard = liveScoreboardApi.getScoreboard();
+        assertThat(scoreboard.getMatchList()).isEmpty();
         assertThat(scoreboard.getSummary()).isEmpty();
     }
 
@@ -192,7 +192,7 @@ class LiveScoreboardApiImplTest {
 
         String expectedSummary = "1. Mexico 3 - Canada 1";
 
-        Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
+        Scoreboard scoreboard = liveScoreboardApi.getScoreboard();
 
         assertThat(scoreboard.getSummary()).isEqualTo(expectedSummary);
     }
@@ -201,14 +201,14 @@ class LiveScoreboardApiImplTest {
     void givenOneFinishedMatch_whenGetScoreboard_thenEmptySummary() throws StartNewMatchException, MatchNotFoundException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
 
-        Scoreboard oneMatchScoreboard = liveScoreboardApi.createScoreboard();
-        assertThat(oneMatchScoreboard.matchList()).hasSize(1);
+        Scoreboard oneMatchScoreboard = liveScoreboardApi.getScoreboard();
+        assertThat(oneMatchScoreboard.getMatchList()).hasSize(1);
         assertThat(oneMatchScoreboard.getSummary()).contains(HOME_TEAM_NAME);
 
         liveScoreboardApi.finishMatch(match.getId());
 
-        Scoreboard mostUpdatedScoreboard = liveScoreboardApi.createScoreboard();
-        assertThat(mostUpdatedScoreboard.matchList()).isEmpty();
+        Scoreboard mostUpdatedScoreboard = liveScoreboardApi.getScoreboard();
+        assertThat(mostUpdatedScoreboard.getMatchList()).isEmpty();
         assertThat(mostUpdatedScoreboard.getSummary()).isEmpty();
     }
 
@@ -236,7 +236,7 @@ class LiveScoreboardApiImplTest {
                 4. Argentina 3 - Australia 1
                 5. Germany 2 - France 2""";
 
-        Scoreboard scoreboard = liveScoreboardApi.createScoreboard();
+        Scoreboard scoreboard = liveScoreboardApi.getScoreboard();
 
         assertThat(scoreboard.getSummary()).isEqualTo(expectedSummary);
     }

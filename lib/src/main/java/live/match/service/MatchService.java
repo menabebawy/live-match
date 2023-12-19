@@ -9,7 +9,7 @@ public interface MatchService {
 
     void finish(String id) throws MatchNotFoundException;
 
-    Scoreboard createSortedScoreboard();
+    Scoreboard getSortedScoreboard();
 
     static MatchService createInstance() {
         return new MatchServiceImpl();

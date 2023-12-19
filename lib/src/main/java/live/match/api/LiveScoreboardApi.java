@@ -59,7 +59,7 @@ public interface LiveScoreboardApi {
     void finishMatch(String id) throws IllegalArgumentException, MatchNotFoundException;
 
     /**
-     * Return {@code Scoreboard} in which all in progress matches there.
+     * Return most updated {@code Scoreboard} in which all in progress matches there.
      *
      * <p> Use this method to get scoreboard where you can easily call
      * {@code getSummery} that shows sorted in progress matches by score and most
@@ -67,7 +67,7 @@ public interface LiveScoreboardApi {
      *
      * @return {@code Scoreboard}
      */
-    Scoreboard createScoreboard();
+    Scoreboard getScoreboard();
 
     static LiveScoreboardApi createInstance() {
         return new LiveScoreboardApiImpl(MatchService.createInstance());
