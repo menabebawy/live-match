@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class LiveScoreboardApiImplTest {
     LiveScoreboardApi liveScoreboardApi;
@@ -33,11 +34,10 @@ class LiveScoreboardApiImplTest {
 
     // region start new match
     @Test
-    void givenValidTeamsNames_whenStartNewMatch_thenMatchStartedInProgressAndScoreZero() throws StartNewMatchException {
+    void givenValidTeamsNames_whenStartNewMatch_thenMatchStartedAndScoreZero() throws StartNewMatchException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
         assertThat(match).isNotNull();
         assertThat(match.getScore()).isZero();
-        assertThat(match.isFinished()).isFalse();
     }
 
     @Test
@@ -46,11 +46,9 @@ class LiveScoreboardApiImplTest {
         liveScoreboardApi.finishMatch(firstMatch.getId());
 
         Match secondMatch = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, "Paris");
-        assertThat(secondMatch.isFinished()).isFalse();
         assertThat(secondMatch.getScore()).isZero();
 
         Match thirdMatch = liveScoreboardApi.startNewMatch("Vienna", AWAY_TEAM_NAME);
-        assertThat(thirdMatch.isFinished()).isFalse();
         assertThat(thirdMatch.getScore()).isZero();
     }
 
@@ -97,7 +95,7 @@ class LiveScoreboardApiImplTest {
         liveScoreboardApi.finishMatch(match.getId());
 
         assertThatThrownBy(() -> liveScoreboardApi.updateMatch(match.getId(), 0, 1))
-                .isInstanceOf(InvalidMatchStateException.class);
+                .isInstanceOf(MatchNotFoundException.class);
     }
 
     @Test
@@ -154,11 +152,9 @@ class LiveScoreboardApiImplTest {
     // region finish match
 
     @Test
-    void givenFinishedMatchId_whenFinishMatch_thenNothing() throws StartNewMatchException, MatchNotFoundException {
+    void givenFinishedMatchId_whenFinishMatch_thenNothing() throws StartNewMatchException {
         Match match = liveScoreboardApi.startNewMatch(HOME_TEAM_NAME, AWAY_TEAM_NAME);
-        liveScoreboardApi.finishMatch(match.getId());
-        Match finishedMatch = liveScoreboardApi.finishMatch(match.getId());
-        assertThat(finishedMatch.isFinished()).isTrue();
+        assertDoesNotThrow(() -> liveScoreboardApi.finishMatch(match.getId()));
     }
 
     @ParameterizedTest

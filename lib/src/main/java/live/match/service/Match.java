@@ -7,7 +7,6 @@ public final class Match {
     private final Team awayTeam;
     private int homeTeamScore;
     private int awayTeamScore;
-    private boolean finished;
 
     Match(String id, long startedAt, Team homeTeam, Team awayTeam) {
         this.id = id;
@@ -40,10 +39,6 @@ public final class Match {
         return awayTeamScore;
     }
 
-    public boolean isFinished() {
-        return finished;
-    }
-
     public int getScore() {
         return homeTeamScore + awayTeamScore;
     }
@@ -51,9 +46,5 @@ public final class Match {
     void setTeamsScores(int homeTeamScore, int awayTeamScore) {
         this.homeTeamScore = homeTeamScore;
         this.awayTeamScore = awayTeamScore;
-    }
-
-    void setFinished() {
-        this.finished = true;
     }
 }

@@ -7,7 +7,7 @@ public interface MatchService {
                  int homeTeamScore,
                  int awayTeamScore) throws MatchNotFoundException, InvalidMatchStateException;
 
-    Match finish(String id) throws MatchNotFoundException;
+    void finish(String id) throws MatchNotFoundException;
 
     Scoreboard createSortedScoreboard();
 

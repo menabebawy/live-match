@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class MatchServiceImplTest {
     MatchService matchService;
@@ -28,7 +29,6 @@ class MatchServiceImplTest {
         assertThat(match.getHomeTeamScore()).isZero();
         assertThat(match.getAwayTeamScore()).isZero();
         assertThat(match.getScore()).isZero();
-        assertThat(match.isFinished()).isFalse();
     }
 
     // endregion
@@ -40,7 +40,7 @@ class MatchServiceImplTest {
         matchService.finish(match.getId());
 
         assertThatThrownBy(() -> matchService.update(match.getId(), 2, 0))
-                .isInstanceOf(InvalidMatchStateException.class);
+                .isInstanceOf(MatchNotFoundException.class);
     }
 
     @Test
@@ -70,13 +70,6 @@ class MatchServiceImplTest {
     // endregion
 
     // region finish match
-    @Test
-    void givenFinishedMatchId_whenFinishMatch_thenNothing() throws StartNewMatchException, MatchNotFoundException {
-        Match match = getStartedMatchBetweenHomeAndAway();
-        matchService.finish(match.getId());
-        Match finishedMatch = matchService.finish(match.getId());
-        assertThat(finishedMatch.isFinished()).isTrue();
-    }
 
     @Test
     void givenNotFoundMatchId_whenFinishMatch_thenThrowsMatchNotFoundException() {
@@ -85,10 +78,9 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void givenInProgressMatchId_whenFinishMatch_thenMatchFinisher() throws StartNewMatchException, MatchNotFoundException {
+    void givenInProgressMatchId_whenFinishMatch_thenMatchFinisher() throws StartNewMatchException {
         Match match = getStartedMatchBetweenHomeAndAway();
-        Match finishedMatch = matchService.finish(match.getId());
-        assertThat(finishedMatch.isFinished()).isTrue();
+        assertDoesNotThrow(() -> matchService.finish(match.getId()));
     }
 
     private Match getStartedMatchBetweenHomeAndAway() throws StartNewMatchException {

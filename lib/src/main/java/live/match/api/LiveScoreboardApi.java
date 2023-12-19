@@ -49,20 +49,14 @@ public interface LiveScoreboardApi {
                       int awayTeamScore) throws IllegalArgumentException, MatchNotFoundException, InvalidMatchStateException;
 
     /**
-     * Returns finished {@code Match}
-     *
      * <p> Use this method to finish in progress match.
      * It takes the id of desired match to finish.
-     * It returns most update {@code Match}.
-     * It is not applicable to finish match that not has been
-     * started yet.
      *
      * @param id of the desired match to update
-     * @return the finished {@code Match}
      * @throws IllegalArgumentException if id is null or blank
      * @throws MatchNotFoundException if id is not found in DB
      */
-    Match finishMatch(String id) throws IllegalArgumentException, MatchNotFoundException;
+    void finishMatch(String id) throws IllegalArgumentException, MatchNotFoundException;
 
     /**
      * Return {@code Scoreboard} in which all in progress matches there.

@@ -37,10 +37,6 @@ class MatchServiceImpl implements MatchService {
                         int awayTeamScore) throws InvalidMatchStateException, MatchNotFoundException {
         Match match = getMatchByIdOrThrowException(id);
 
-        if (match.isFinished()) {
-            throw new InvalidMatchStateException("Update finished match is not allowed");
-        }
-
         if (areScoresLessThanCurrent(homeTeamScore, awayTeamScore, match)) {
             throw new InvalidMatchStateException("Value is less than current");
         }
@@ -57,16 +53,9 @@ class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Match finish(String id) throws MatchNotFoundException {
-        Match match = getMatchByIdOrThrowException(id);
-
-        if (match.isFinished()) {
-            return match;
-        }
-
-        match.setFinished();
-
-        return matchMap.put(match.getId(), match);
+    public void finish(String id) throws MatchNotFoundException {
+        getMatchByIdOrThrowException(id);
+        matchMap.remove(id);
     }
 
     private Match getMatchByIdOrThrowException(String id) throws MatchNotFoundException {
@@ -79,19 +68,15 @@ class MatchServiceImpl implements MatchService {
 
     @Override
     public Scoreboard createSortedScoreboard() {
-        List<Match> inProgressMatches = getInProgressMatches().stream()
+        List<Match> inProgressMatches = matchMap.values().stream()
                 .sorted(Comparator.comparing(Match::getScore).thenComparing(Match::getStartedAt).reversed())
                 .toList();
         return new Scoreboard(inProgressMatches);
     }
 
     private List<String> getOccupiedTeamsNames() {
-        return getInProgressMatches().stream()
+        return matchMap.values().stream()
                 .flatMap(match -> Stream.of(match.getHomeTeam().name(), match.getAwayTeam().name()))
                 .toList();
-    }
-
-    private List<Match> getInProgressMatches() {
-        return matchMap.values().stream().filter(match -> !match.isFinished()).toList();
     }
 }

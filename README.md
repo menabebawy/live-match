@@ -50,11 +50,10 @@ int firstTeamScore, int secondTeamScore);
 ### Finish match
 
 When the time is over and match just finished, then you can finish the match by calling the following. It throws
-an exception when it could not finish it, for instance, you try to finish match that it had been finished. Therefore, it
-should be surrounded using `try catch`.
+an exception when match id is not found. Therefore, it should be surrounded using `try catch`.
 
 ```java
-Match match = liveScoreboardApi.finshMatch(String id);
+liveScoreboardApi.finshMatch(String id);
 ```
 
 ### Scoreboard screen
