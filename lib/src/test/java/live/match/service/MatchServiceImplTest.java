@@ -87,7 +87,7 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void givenInProgressMatchId_whenFinishMatch_thenMatchRemoved() throws StartNewMatchException, MatchNotFoundException {
+    void givenInProgressMatchId_whenFinishMatch_thenMatchRemoved() {
         Match currentMatch = MockFactory.updatedMatchInstance(2, 1);
 
         when(scoreboard.getOptionalMatch("id")).thenReturn(Optional.of(currentMatch));
