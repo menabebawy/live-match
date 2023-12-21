@@ -67,7 +67,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenTeamScoreLessThanZero_whenUpdateMatch_thenThrowIllegalArgumentException() throws StartNewMatchException {
+    void givenTeamScoreLessThanZero_whenUpdateMatch_thenThrowIllegalArgumentException() {
         assertThatThrownBy(() -> liveScoreboardApi.updateMatch("id", 2, -1))
                 .isInstanceOf(IllegalArgumentException.class);
     }
@@ -88,7 +88,7 @@ class LiveScoreboardApiImplTest {
     }
 
     @Test
-    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws StartNewMatchException, MatchNotFoundException, InvalidMatchStateException {
+    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws MatchNotFoundException, InvalidMatchStateException {
         Match mockUpdatedMatch = MockFactory.updatedMatchInstance(1, 0);
 
         when(matchService.update(mockUpdatedMatch.getId(), 1, 0)).thenReturn(mockUpdatedMatch);
