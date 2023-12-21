@@ -1,6 +1,5 @@
 package live.match.service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -8,11 +7,8 @@ import java.util.stream.Stream;
 class MatchServiceImpl implements MatchService {
     private final Scoreboard scoreboard;
 
-    MatchServiceImpl() {
-        Comparator<Match> matchComparator = Comparator.comparing(Match::getScore)
-                .thenComparing(Match::getStartedAt)
-                .reversed();
-        scoreboard = new Scoreboard(matchComparator);
+    MatchServiceImpl(Scoreboard scoreboard) {
+        this.scoreboard = scoreboard;
     }
 
     @Override
@@ -21,8 +17,7 @@ class MatchServiceImpl implements MatchService {
         Team homeTeam = new Team(homeTeamName.trim());
         Team awayTeam = new Team(awayTeamName.trim());
         Match match = new Match(UUID.randomUUID().toString(), System.nanoTime(), homeTeam, awayTeam);
-        scoreboard.addMatch(match);
-        return match;
+        return scoreboard.addMatch(match);
     }
 
     private void validateTeamsAvailability(String homeTeamName, String awayTeamName) throws StartNewMatchException {

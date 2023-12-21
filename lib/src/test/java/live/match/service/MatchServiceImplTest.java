@@ -3,17 +3,29 @@ package live.match.service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
+import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class MatchServiceImplTest {
     MatchService matchService;
 
+    @Mock
+    Scoreboard scoreboard;
+
     @BeforeEach
     void setUp() {
-        matchService = MatchService.createInstance();
+        matchService = new MatchServiceImpl(scoreboard);
     }
 
     @AfterEach
@@ -21,71 +33,66 @@ class MatchServiceImplTest {
         matchService = null;
     }
 
-    // region start match
-
     @Test
     void givenFreshStartedMatch_thenAllFieldAreDefault() throws StartNewMatchException {
-        Match match = getStartedMatchBetweenHomeAndAway();
+        Match mockMatch = MockFactory.createMatchInstance();
+
+        when(scoreboard.addMatch(any())).thenReturn(mockMatch);
+
+        Match match = matchService.start("HomeTeam", "AwayTeam");
+
         assertThat(match.getHomeTeamScore()).isZero();
         assertThat(match.getAwayTeamScore()).isZero();
         assertThat(match.getScore()).isZero();
-    }
-
-    // endregion
-
-    // region update match
-    @Test
-    void givenTeamsScoreForFinishedMatch_whenUpdateMatch_thenThrowsInvalidMatchStateException() throws StartNewMatchException, MatchNotFoundException {
-        Match match = getStartedMatchBetweenHomeAndAway();
-        matchService.finish(match.getId());
-
-        assertThatThrownBy(() -> matchService.update(match.getId(), 2, 0))
-                .isInstanceOf(MatchNotFoundException.class);
+        assertThat(match.getHomeTeam().name()).isEqualTo(mockMatch.getHomeTeam().name());
+        assertThat(match.getAwayTeam().name()).isEqualTo(mockMatch.getAwayTeam().name());
     }
 
     @Test
-    void givenNotStartedMatchYet_whenUpdateMatch_thenThrowsMatchNotFoundException() {
-        Match match = new Match("id", System.nanoTime(), new Team("Team1"), new Team("Team2"));
-        assertThatThrownBy(() -> matchService.update(match.getId(), 1, 0))
-                .isInstanceOf(MatchNotFoundException.class);
-    }
+    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowsInvalidMatchStateException() {
+        Match currentMatch = MockFactory.updatedMatchInstance(2, 1);
 
-    @Test
-    void givenScoreLessThanCurrent_whenUpdateMatch_thenThrowsInvalidMatchStateException() throws StartNewMatchException, MatchNotFoundException, InvalidMatchStateException {
-        Match match = getStartedMatchBetweenHomeAndAway();
-        matchService.update(match.getId(), 2, 0);
+        when(scoreboard.getOptionalMatch(any())).thenReturn(Optional.of(currentMatch));
 
-        assertThatThrownBy(() -> matchService.update(match.getId(), 0, 1))
+        assertThatThrownBy(() -> matchService.update("id", 2, 0))
                 .isInstanceOf(InvalidMatchStateException.class);
     }
 
     @Test
-    void givenValidScores_whenUpdateMatch_thenNewScoresUpdated() throws StartNewMatchException, MatchNotFoundException, InvalidMatchStateException {
-        Match match = getStartedMatchBetweenHomeAndAway();
-        Match updatedMatch = matchService.update(match.getId(), 1, 0);
-        assertThat(updatedMatch.getHomeTeamScore()).isEqualTo(1);
-        assertThat(updatedMatch.getAwayTeamScore()).isZero();
+    void givenValidScores_whenUpdateMatch_thenUpdateMatch() throws InvalidMatchStateException, MatchNotFoundException {
+        Match currentMatch = MockFactory.updatedMatchInstance(2, 1);
+
+        when(scoreboard.getOptionalMatch(any())).thenReturn(Optional.of(currentMatch));
+
+        Match updatedMatch = matchService.update("id", 2, 2);
+
+        assertThat(updatedMatch.getScore()).isEqualTo(4);
+        assertThat(updatedMatch.getAwayTeamScore()).isEqualTo(2);
+        assertThat(currentMatch.getHomeTeamScore()).isEqualTo(2);
     }
 
-    // endregion
-
-    // region finish match
-
     @Test
-    void givenNotFoundMatchId_whenFinishMatch_thenThrowsMatchNotFoundException() {
-        assertThatThrownBy(() -> matchService.finish("id"))
+    void givenNotFoundMatchId_whenUpdateMatch_thenThrowsMatchNotFoundException() {
+        when(scoreboard.getOptionalMatch(any())).thenReturn(empty());
+
+        assertThatThrownBy(() -> matchService.update("id", 2, 1))
                 .isInstanceOf(MatchNotFoundException.class);
     }
 
     @Test
-    void givenInProgressMatchId_whenFinishMatch_thenMatchFinisher() throws StartNewMatchException {
-        Match match = getStartedMatchBetweenHomeAndAway();
-        assertDoesNotThrow(() -> matchService.finish(match.getId()));
+    void givenNotFoundMatchId_whenFinishMatch_thenThrowsMatchNotFoundException() {
+        when(scoreboard.getOptionalMatch(any())).thenReturn(empty());
+
+        assertThatThrownBy(() -> matchService.finish("id")).isInstanceOf(MatchNotFoundException.class);
     }
 
-    private Match getStartedMatchBetweenHomeAndAway() throws StartNewMatchException {
-        return matchService.start("HomeTeam", "AwayTeam");
+    @Test
+    void givenInProgressMatchId_whenFinishMatch_thenMatchRemoved() throws StartNewMatchException, MatchNotFoundException {
+        Match currentMatch = MockFactory.updatedMatchInstance(2, 1);
+
+        when(scoreboard.getOptionalMatch("id")).thenReturn(Optional.of(currentMatch));
+
+        assertDoesNotThrow(() -> matchService.finish("id"));
     }
 
-    // endregion
 }

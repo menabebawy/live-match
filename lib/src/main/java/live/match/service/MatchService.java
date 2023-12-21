@@ -1,5 +1,8 @@
 package live.match.service;
 
+import java.util.Comparator;
+import java.util.concurrent.ConcurrentHashMap;
+
 public interface MatchService {
     Match start(String homeTeamName, String awayTeamName) throws StartNewMatchException;
 
@@ -12,6 +15,9 @@ public interface MatchService {
     Scoreboard getSortedScoreboard();
 
     static MatchService createInstance() {
-        return new MatchServiceImpl();
+        Comparator<Match> comparator = Comparator.comparing(Match::getScore)
+                .thenComparing(Match::getStartedAt)
+                .reversed();
+        return new MatchServiceImpl(new Scoreboard(comparator, new ConcurrentHashMap<>()));
     }
 }
