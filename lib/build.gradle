@@ -9,6 +9,7 @@ plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
     id 'jacoco'
+    id 'maven-publish'
 }
 
 repositories {
@@ -57,5 +58,24 @@ jacocoTestReport {
         xml.required = false
         csv.required = true
         html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            version = '1.0.0'
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name ''
+            url 'https://livematch-925570863662.d.codeartifact.us-east-1.amazonaws.com/maven/live-match-core'
+            credentials {
+                username 'aws'
+                password System.env.CODEARTIFACT_AUTH_TOKEN
+            }
+        }
     }
 }
