@@ -53,7 +53,10 @@ class LiveScoreBoardApiIntegrationTest {
     void shouldNotStartNewMatchIfTeamIsOccupied() throws StartNewMatchException {
         liveScoreboardApi.startNewMatch("Canada", "France");
 
-        assertThatThrownBy(() -> liveScoreboardApi.startNewMatch("Austria", "France"))
+        assertThatThrownBy(() -> liveScoreboardApi.startNewMatch("France", "Austria"))
+                .isInstanceOf(StartNewMatchException.class);
+
+        assertThatThrownBy(() -> liveScoreboardApi.startNewMatch("Austria", "Canada"))
                 .isInstanceOf(StartNewMatchException.class);
     }
 

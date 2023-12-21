@@ -56,6 +56,9 @@ class MatchServiceImplTest {
 
         assertThatThrownBy(() -> matchService.update("id", 2, 0))
                 .isInstanceOf(InvalidMatchStateException.class);
+
+        assertThatThrownBy(() -> matchService.update("id", 1, 3))
+                .isInstanceOf(InvalidMatchStateException.class);
     }
 
     @Test
