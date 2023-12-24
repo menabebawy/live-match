@@ -1,6 +1,6 @@
 # Live Football World Cup Score Board Java Library
 
-![example event parameter](https://github.com/menabebawy/live-match/actions/workflows/ci-gradle.yml/badge.svg?event=push)
+![example event parameter](https://github.com/menabebawy/live-match/actions/workflows/gradle-ci.yml/badge.svg?event=push)
 [![Coverage](.github/badges/jacoco.svg)](https://github.com/menabebawy/live-match/actions/workflows/ci-gradle.yml)
 
 ## Overview
