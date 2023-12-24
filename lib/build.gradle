@@ -33,6 +33,8 @@ dependencies {
 
 // Apply a specific Java toolchain to ease working on different environments.
 java {
+    withJavadocJar()
+    withSourcesJar()
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
@@ -64,18 +66,27 @@ jacocoTestReport {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            groupId = 'org.live.match'
+            artifactId = 'scoreboard'
             version = '1.0.0'
+
             from components.java
         }
     }
     repositories {
         maven {
-            name ''
-            url 'https://livematch-925570863662.d.codeartifact.us-east-1.amazonaws.com/maven/live-match-core'
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/menabebawy/live-match"
             credentials {
-                username 'aws'
-                password System.env.CODEARTIFACT_AUTH_TOKEN
+                username = System.env.GITHUB_ACTOR
+                password = System.env.GITHUB_TOKEN
             }
         }
+    }
+}
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
     }
 }
