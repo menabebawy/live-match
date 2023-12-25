@@ -44,5 +44,5 @@ jobs:
           arguments: publish
           gradle-version: 8.3
         env:
-          # USERNAME: ${{ github.actor }}
+          USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.JAVA_TOKEN }}
