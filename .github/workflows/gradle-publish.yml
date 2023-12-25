@@ -36,6 +36,10 @@ jobs:
           arguments: build
           gradle-version: 8.3
 
+      - name: Set output
+        id: vars
+        run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+
       # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
       # the publishing section of your build.gradle
       - name: Publish to GitHub Packages
@@ -44,5 +48,6 @@ jobs:
           arguments: publish
           gradle-version: 8.3
         env:
+          PACKAGE_VERSION: ${{ steps.vars.outputs.tag }}
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.JAVA_TOKEN }}
