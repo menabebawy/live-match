@@ -68,7 +68,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId = 'org.live.match'
             artifactId = 'scoreboard'
-            version = System.getenv("PACKAGE_VERSION")
+            version = System.getenv("VERSION")
 
             from components.java
         }

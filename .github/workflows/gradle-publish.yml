@@ -48,6 +48,6 @@ jobs:
           arguments: publish
           gradle-version: 8.3
         env:
-          PACKAGE_VERSION: ${{ steps.vars.outputs.tag }}
+          VERSION: ${{ steps.vars.outputs.tag }}
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.JAVA_TOKEN }}
