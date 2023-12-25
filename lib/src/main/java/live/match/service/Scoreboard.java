@@ -4,16 +4,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class Scoreboard {
     private final Map<String, Match> matchMap;
     private final Comparator<Match> matchComparator;
 
 
-    Scoreboard(Comparator<Match> matchComparator) {
-        matchMap = new ConcurrentHashMap<>();
-        this.matchComparator = matchComparator;
+    Scoreboard(Comparator<Match> comparator, Map<String, Match> matchMap) {
+        this.matchMap = matchMap;
+        this.matchComparator = comparator;
     }
 
     public String getSummary() {
@@ -48,8 +47,9 @@ public final class Scoreboard {
         return match == null ? Optional.empty() : Optional.of(match);
     }
 
-    void addMatch(Match match) {
+    Match addMatch(Match match) {
         matchMap.putIfAbsent(match.getId(), match);
+        return match;
     }
 
     void updateMatch(Match updatedMatch) {
