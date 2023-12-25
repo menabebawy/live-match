@@ -78,8 +78,8 @@ publishing {
             name = "GitHubPackages"
             url = "https://maven.pkg.github.com/menabebawy/live-match"
             credentials {
-                username = System.env.GITHUB_ACTOR
-                password = System.env.GITHUB_TOKEN
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
             }
         }
     }
